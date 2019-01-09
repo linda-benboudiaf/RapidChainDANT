@@ -2,5 +2,7 @@
 AlgorithmeConcensus
 Documentation: 
 https://eprint.iacr.org/2018/460.pdf
-#WEB SITE 
+
+
+`WEB SITE` 
 https://lindaacc.github.io/RapidChainDANT/
