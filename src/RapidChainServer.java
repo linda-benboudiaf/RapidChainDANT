@@ -14,8 +14,7 @@ public class RapidChainServer extends Server {
 
 	public RapidChainServer(int port, int pool, int logLevel) {
 		super(port, pool, logLevel);
-		this.motd = "Welcome to Shifumi server 12.7\n"
-				+ "you can set your name with the command: name";
+		this.motd = "Welcome to RapidChain server 12.7";
 		this.factory = new RapidChainServerFactory();
 	}
 }

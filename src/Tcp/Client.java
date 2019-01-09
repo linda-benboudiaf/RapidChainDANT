@@ -33,24 +33,27 @@ public class Client extends Connection implements Runnable {
 
 	@Override
 	public void run() {
-		try (Socket c = new Socket()) {
+		try (Socket c = new Socket(); Scanner sc = new Scanner(System.in);) {
 			InetSocketAddress sock = new InetSocketAddress(this.host, this.port);
 			c.connect(sock);
 			this.debug("connection established");
 			this.setFromSocket(c);
-			Scanner sc = new Scanner(System.in);
+			new Thread(() -> {
+				while (true) {
+					try {
+						System.out.println(this.receive());
+					} catch (IOException e) {
+						this.error(e);
+					}
+				}
+			}).start();
 			String msg = "";
 			while (true) {
-				try {
-					System.out.println(this.receive());
-					msg = sc.next();
-					send(msg);
-				} catch (IOException e) {
-					sc.close();
-				}
+				msg = sc.next();
+				send(msg);
 			}
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			this.error(e);
 			e.printStackTrace();
 		}

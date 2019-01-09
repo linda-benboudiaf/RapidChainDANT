@@ -6,7 +6,7 @@ import java.util.concurrent.Callable;
 
 import Common.Debuggable;
 
-public class ClientManager extends Debuggable implements Callable<String> {
+public class ConnectionManager extends Debuggable implements Callable<String> {
 
 	protected Connection client;
 	protected String motd;
@@ -14,7 +14,7 @@ public class ClientManager extends Debuggable implements Callable<String> {
 	protected String[] exitCommands = {"exit"};
 	protected String exitMessage = "disconnected";
 
-	public ClientManager(Connection client, String motd, String id, int logLevel, String type) {
+	public ConnectionManager(Connection client, String motd, String id, int logLevel, String type) {
 		super(logLevel, type + ".CLIENT" + id);
 		client.setType(this.type);
 		this.client = client;
@@ -22,11 +22,11 @@ public class ClientManager extends Debuggable implements Callable<String> {
 		this.id = id;
 	}
 
-	public ClientManager(Connection client, String motd, String id, int logLevel) {
+	public ConnectionManager(Connection client, String motd, String id, int logLevel) {
 		this(client, motd, id, logLevel, "");
 	}
 
-	public ClientManager(Connection client, String motd, String id) {
+	public ConnectionManager(Connection client, String motd, String id) {
 		this(client, motd, id, 0);
 	}
 
