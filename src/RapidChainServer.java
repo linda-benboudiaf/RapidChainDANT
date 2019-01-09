@@ -1,4 +1,5 @@
 
+import Blockchain.Hash;
 import Tcp.Server;
 
 /**
@@ -7,6 +8,7 @@ import Tcp.Server;
  *
  */
 public class RapidChainServer extends Server {
+	protected Hash i; 
 	
 	public RapidChainServer(int port, int pool) {
 		this(port, pool, 1);
@@ -16,5 +18,6 @@ public class RapidChainServer extends Server {
 		super(port, pool, logLevel);
 		this.motd = "Welcome to RapidChain server 12.7";
 		this.factory = new RapidChainServerFactory();
+		this.i = new Hash(); 
 	}
 }
