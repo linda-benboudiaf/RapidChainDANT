@@ -1,0 +1,21 @@
+
+import Tcp.Server;
+
+/**
+ * Class to run a shifumi server
+ * @author Nicolas
+ *
+ */
+public class RapidChainServer extends Server {
+	
+	public RapidChainServer(int port, int pool) {
+		this(port, pool, 1);
+	}
+
+	public RapidChainServer(int port, int pool, int logLevel) {
+		super(port, pool, logLevel);
+		this.motd = "Welcome to Shifumi server 12.7\n"
+				+ "you can set your name with the command: name";
+		this.factory = new RapidChainServerFactory();
+	}
+}

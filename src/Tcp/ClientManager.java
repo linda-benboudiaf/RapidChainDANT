@@ -60,10 +60,10 @@ public class ClientManager extends Debuggable implements Callable<String> {
 
 	protected String response(String msg) {
 		switch (msg) {
-		case "yo":
-			return "yo man";
-		default:
-			return "unknown command: " + msg;
+			case "yo":
+				return "yo man";
+			default:
+				return "unknown command: " + msg;
 		}
 	}
 
