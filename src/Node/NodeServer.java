@@ -22,12 +22,13 @@ public class NodeServer extends Server {
 		this.factory = new NodeServerFactory();
 		try {
 			this.routeTable = new RouteTable();
-			Node node = new Node(new Ip("128.78.51.131"));
-			this.routeTable.add(node);
+			this.routeTable.add(new Node(new Ip("128.78.51.131")));
+			this.routeTable.add(new Node(new Ip("192.23.34.55")));
 			this.routeTable.save();
 			this.routeTable.load();
 		} catch (IOException e) {
 			this.error(e);
 		}
+		this.info(this.routeTable.toString());
 	}
 }
