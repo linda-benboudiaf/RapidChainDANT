@@ -12,7 +12,7 @@ public class Block {
 	public String previousHash;
 	private String data; 
 	private long timeStamp;
-	private int no; 
+	private int nonce; 
 	//Block Constructor.
 	public Block(String data,String previousHash ) {
 		this.data = data;
@@ -28,7 +28,7 @@ public class Block {
 		String calculatedhash = Hash.ApplyHash( 
 				previousHash +
 				Long.toString(timeStamp) +
-				Integer.toString(no) + 
+				Integer.toString(nonce) + 
 				data 
 				);
 		return calculatedhash;
@@ -38,7 +38,7 @@ public class Block {
 	public void mineBlock(int difficulty) {
 		String target = Hash.getDificultyString(difficulty); //Create a string with difficulty * "0" 
 		while(!hash.substring( 0, difficulty).equals(target)) {
-			no ++;
+			nonce ++;
 			hash = calculateHash();
 		}
 		System.out.println("Block Mined!!! : " + hash);
