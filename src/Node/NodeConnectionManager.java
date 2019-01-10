@@ -1,11 +1,12 @@
+package Node;
 
 
 import Tcp.ConnectionManager;
 import Tcp.Connection;
 
-public class RapidChainConnectionManager extends ConnectionManager {
+public class NodeConnectionManager extends ConnectionManager {
 
-	public RapidChainConnectionManager(Connection client, String motd, String id, int logLevel, String type) {
+	public NodeConnectionManager(Connection client, String motd, String id, int logLevel, String type) {
 		super(client, motd, id, logLevel, type);
 		this.exitCommands = new String[] { "exit", "quit" };
 	}

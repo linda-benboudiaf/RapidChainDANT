@@ -53,6 +53,9 @@ public abstract class Debuggable {
 	 */
 	protected void error(Exception e) {
 		System.err.println(this.typeString() + e.getMessage());
+		if (logLevel > 2) {
+			e.printStackTrace();
+		}
 	}
 	
 	private String typeString() {
