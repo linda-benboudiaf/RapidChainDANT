@@ -1,8 +1,8 @@
-package Node;
+package node;
 
 
-import Tcp.ConnectionManager;
-import Tcp.Connection;
+import tcp.Connection;
+import tcp.ConnectionManager;
 
 public class NodeConnectionManager extends ConnectionManager {
 

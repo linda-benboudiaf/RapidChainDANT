@@ -1,10 +1,10 @@
-package Tcp;
+package tcp;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import Common.Debuggable;
+import common.Debuggable;
 
 public class ConnectionManager extends Debuggable implements Callable<String> {
 

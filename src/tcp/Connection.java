@@ -1,9 +1,9 @@
-package Tcp;
+package tcp;
 
 import java.io.IOException;
 import java.net.Socket;
 
-import Common.IOTransmitter;
+import common.IOTransmitter;
 
 public class Connection extends IOTransmitter {
 

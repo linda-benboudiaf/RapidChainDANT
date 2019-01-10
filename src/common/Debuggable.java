@@ -1,4 +1,4 @@
-package Common;
+package common;
 
 /**
  * Class to print a debug message if set as verbose

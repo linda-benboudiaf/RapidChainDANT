@@ -1,4 +1,4 @@
-package Blockchain;
+package blockchain;
 import java.security.*;
 import com.google.gson.*;
 public class Hash {

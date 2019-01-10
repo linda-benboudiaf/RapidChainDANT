@@ -1,3 +1,4 @@
 /bin/
 /data/*
 .metadata
+.DS_Store

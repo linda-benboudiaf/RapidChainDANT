@@ -1,4 +1,4 @@
-package Node;
+package node;
 
 public class Node {
 	protected Ip ip;

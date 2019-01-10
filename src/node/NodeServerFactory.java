@@ -1,7 +1,7 @@
-package Node;
+package node;
 
-import Tcp.Connection;
-import Tcp.ServerFactory;
+import tcp.Connection;
+import tcp.ServerFactory;
 
 public class NodeServerFactory extends ServerFactory {
 

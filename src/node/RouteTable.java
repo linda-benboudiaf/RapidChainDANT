@@ -1,4 +1,4 @@
-package Node;
+package node;
 
 import java.io.File;
 import java.io.FileNotFoundException;

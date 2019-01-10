@@ -1,4 +1,4 @@
-package Blockchain;
+package blockchain;
 
 public class Pocket {
 

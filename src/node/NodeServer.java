@@ -1,8 +1,8 @@
-package Node;
+package node;
 
 import java.io.IOException;
 
-import Tcp.Server;
+import tcp.Server;
 
 /**
  * Class to run a shifumi server

@@ -1,4 +1,4 @@
-package Tcp;
+package tcp;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -7,7 +7,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import Common.Debuggable;
+import common.Debuggable;
 
 /**
  * Runnable class to create a server that can send and receive messages to a
