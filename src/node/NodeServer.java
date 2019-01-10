@@ -2,6 +2,7 @@ package node;
 
 import java.io.IOException;
 
+import common.Store;
 import tcp.Server;
 
 /**
@@ -10,6 +11,7 @@ import tcp.Server;
  *
  */
 public class NodeServer extends Server {
+	protected Store store  = new Store();
 	protected RouteTable routeTable;
 	
 	public NodeServer(int port, int pool) {
@@ -23,11 +25,12 @@ public class NodeServer extends Server {
 		
 		// tests routetable
 		try {
-			this.routeTable = new RouteTable();
-			this.routeTable.add(new Node("128.78.51.131", 3032));
-			this.routeTable.add(new Node("localhost", 3023));
-			this.routeTable.save();
-			this.routeTable.load();
+			routeTable = new RouteTable();
+			routeTable.add(new Node("128.78.51.131", 3032));
+			routeTable.add(new Node("localhost", 3023));
+			store.register(routeTable, "routes");
+			store.save("routes");
+			store.load("routes");
 		} catch (IOException e) {
 			this.error(e);
 		}
