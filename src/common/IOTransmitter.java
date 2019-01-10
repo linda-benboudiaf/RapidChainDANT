@@ -13,14 +13,9 @@ public class IOTransmitter extends Debuggable {
 	protected OutputStream os;
 	protected InputStream is;
 	
-	public IOTransmitter(int verbose, String type) {
-		super(verbose, type);
+	public IOTransmitter(String type) {
+		super(type);
 	}
-	
-	public IOTransmitter(int verbose) {
-		super(verbose);
-	}
-
 
 	public void setOs(OutputStream os) {
 		this.os = os;

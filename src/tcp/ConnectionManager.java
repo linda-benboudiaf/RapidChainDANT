@@ -14,20 +14,16 @@ public class ConnectionManager extends Debuggable implements Callable<String> {
 	protected String[] exitCommands = {"exit"};
 	protected String exitMessage = "disconnected";
 
-	public ConnectionManager(Connection client, String motd, String id, int logLevel, String type) {
-		super(logLevel, type + ".CLIENT" + id);
-		client.setType(this.type);
+	public ConnectionManager(Connection client, String motd, String id, String type) {
+		super(type + ".CLIENT" + id);
+		client.setPrefix(this.prefix);
 		this.client = client;
 		this.motd = motd;
 		this.id = id;
 	}
 
-	public ConnectionManager(Connection client, String motd, String id, int logLevel) {
-		this(client, motd, id, logLevel, "");
-	}
-
 	public ConnectionManager(Connection client, String motd, String id) {
-		this(client, motd, id, 0);
+		this(client, motd, id, "");
 	}
 
 	/**

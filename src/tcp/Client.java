@@ -18,15 +18,11 @@ public class Client extends Connection implements Runnable {
 	protected String exitCommand;
 
 	public Client(int port) {
-		this(port, "exit", 0);
+		this(port, "exit");
 	}
 
 	public Client(int port, String exitCommand) {
-		this(port, exitCommand, 0);
-	}
-
-	public Client(int port, String exitCommand, int logLevel) {
-		super(logLevel, "CLIENT");
+		super("CLIENT");
 		this.port = port;
 		this.exitCommand = exitCommand;
 	}

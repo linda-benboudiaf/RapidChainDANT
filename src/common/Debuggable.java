@@ -7,16 +7,13 @@ package common;
  */
 public abstract class Debuggable {
 	
-	protected String type = "DEBUG";
-	protected int logLevel = 0;
+	protected String prefix = "DEBUG";
 	
-	public Debuggable(int logLevel, String type) {
-		this(logLevel);
-		this.type = type;
+	public Debuggable(String prefix) {
+		this.prefix = prefix;
 	}
-
-	public Debuggable(int logLevel) {
-		this.logLevel = logLevel;
+	
+	public Debuggable() {
 	}
 
 	/**
@@ -24,9 +21,7 @@ public abstract class Debuggable {
 	 * @param msg
 	 */
 	protected void debug(Object msg) {
-		if (this.logLevel > 1) {
-			this.info(msg.toString());
-		}
+		Log.debug(msg, prefix);
 	}
 	
 	/**
@@ -34,9 +29,7 @@ public abstract class Debuggable {
 	 * @param msg
 	 */
 	protected void info(String msg) {
-		if (this.logLevel > 0) {
-			System.out.println(this.typeString() + msg);
-		}
+		Log.info(msg, prefix);
 	}
 	
 	/**
@@ -44,7 +37,7 @@ public abstract class Debuggable {
 	 * @param msg
 	 */
 	protected void error(String msg) {
-		System.err.println(this.typeString() + msg);
+		Log.error(msg, prefix);
 	}
 	
 	/**
@@ -52,15 +45,7 @@ public abstract class Debuggable {
 	 * @param msg
 	 */
 	protected void error(Exception e) {
-		System.err.println(this.typeString() + e.getMessage());
-		if (logLevel > 1) {
-			e.printStackTrace();
-		}
-	}
-	
-	private String typeString() {
-		String[] parts = this.type.split("\\.");
-		return "["+ String.join("][", parts) + "] ";
+		Log.error(e, prefix);
 	}
 
 }

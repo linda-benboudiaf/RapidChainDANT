@@ -6,8 +6,8 @@ import tcp.ConnectionManager;
 
 public class NodeConnectionManager extends ConnectionManager {
 
-	public NodeConnectionManager(Connection client, String motd, String id, int logLevel, String type) {
-		super(client, motd, id, logLevel, type);
+	public NodeConnectionManager(Connection client, String motd, String id, String prefix) {
+		super(client, motd, id, prefix);
 		this.exitCommands = new String[] { "exit", "quit" };
 	}
 

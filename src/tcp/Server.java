@@ -23,14 +23,9 @@ public class Server extends Debuggable implements Runnable {
 	protected ServerFactory factory;
 	protected int numThread = 0;
 
-	public Server(int port, int pool) {
-		this(port, pool, 1);
-	}
-
-	public Server(int port, int poolSize, int logLevel) {
-		super(logLevel);
+	public Server(int port, int poolSize) {
 		this.port = port;
-		this.type = "SERVER";
+		this.prefix = "SERVER";
 		this.executor = new ThreadPoolExecutor(poolSize, poolSize, 0L, TimeUnit.MILLISECONDS,
 				new LinkedBlockingQueue<Runnable>());
 		this.factory = new ServerFactory();
@@ -47,9 +42,8 @@ public class Server extends Debuggable implements Runnable {
 				this.info("new connection: " + number);
 
 				// management of new connection
-				Connection client = this.factory.createClient(sock, this.logLevel, this.type);
-				ConnectionManager cm = this.factory.createClientManager(client, motd, Integer.toString(number),
-						this.logLevel, this.type);
+				Connection client = this.factory.createClient(sock, this.prefix);
+				ConnectionManager cm = this.factory.createClientManager(client, motd, Integer.toString(number), this.prefix);
 				this.executor.submit(cm);
 				
 				// the client is managed separately so we can accept a new connection

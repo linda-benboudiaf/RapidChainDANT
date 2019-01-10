@@ -22,7 +22,7 @@ public class Node {
 		try (Socket s = new Socket()) {
 			s.connect(addr.inet());
 			lastConnection = new Date();
-			return new Connection(s, 2);
+			return new Connection(s);
 		} catch (IOException e) {
 			return null;
 		}

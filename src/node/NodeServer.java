@@ -15,13 +15,9 @@ public class NodeServer extends Server {
 	public static volatile Store store  = new Store("data");
 	protected RouteTable routeTable;
 	protected Pocket pocket;
-	
-	public NodeServer(int port, int pool) {
-		this(port, pool, 1);
-	}
 
-	public NodeServer(int port, int pool, int logLevel) {
-		super(port, pool, logLevel);
+	public NodeServer(int port, int pool) {
+		super(port, pool);
 		this.motd = "Welcome to RapidChain server 12.7";
 		this.factory = new NodeServerFactory();
 		

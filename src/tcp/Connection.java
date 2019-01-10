@@ -7,18 +7,17 @@ import common.IOTransmitter;
 
 public class Connection extends IOTransmitter {
 
-	public Connection(int logLevel, String type) {
-		super(logLevel);
-		this.setType(type);
+	public Connection(String prefix) {
+		super(prefix);
 	}
 	
-	public Connection(Socket sock, int logLevel, String type) {
-		this(logLevel, type);
+	public Connection(Socket sock, String prefix) {
+		this(prefix);
 		this.setFromSocket(sock);
 	}
 	
-	public Connection(Socket sock, int logLevel) {
-		this(sock, logLevel, "");
+	public Connection(Socket sock) {
+		this(sock, "");
 	}
 
 	/**
@@ -35,8 +34,8 @@ public class Connection extends IOTransmitter {
 		}
 	}
 	
-	public void setType(String type) {
-		this.type = type + ".STREAM";
+	public void setPrefix(String prefix) {
+		this.prefix = prefix + ".STREAM";
 	}
 
 }
