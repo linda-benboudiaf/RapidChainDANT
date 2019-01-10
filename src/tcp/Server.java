@@ -57,7 +57,6 @@ public class Server extends Debuggable implements Runnable {
 
 		} catch (IOException e) {
 			this.error(e);
-			e.printStackTrace();
 		}
 	}
 }

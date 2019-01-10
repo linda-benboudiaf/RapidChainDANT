@@ -23,9 +23,9 @@ public abstract class Debuggable {
 	 * Print a debug message in the standard output if verbose
 	 * @param msg
 	 */
-	protected void debug(String msg) {
+	protected void debug(Object msg) {
 		if (this.logLevel > 1) {
-			this.info(msg);;
+			this.info(msg.toString());
 		}
 	}
 	
@@ -53,7 +53,7 @@ public abstract class Debuggable {
 	 */
 	protected void error(Exception e) {
 		System.err.println(this.typeString() + e.getMessage());
-		if (logLevel > 2) {
+		if (logLevel > 1) {
 			e.printStackTrace();
 		}
 	}

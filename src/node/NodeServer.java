@@ -50,5 +50,6 @@ public class NodeServer extends Server {
 		
 		this.info(routeTable.toString());
 		this.info(pocket.toString());
+		this.debug(pocket.isChainValid());
 	}
 }

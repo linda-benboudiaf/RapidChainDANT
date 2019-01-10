@@ -74,6 +74,11 @@ public class Pocket implements Storable {
 		newBlock.mineBlock(level);
 		BlockChain.add(newBlock);
 	}
+	
+	@Override
+	public String toString() {
+		return BlockChain.toString();
+	}
 
 	@Override
 	public boolean isEmpty() {
