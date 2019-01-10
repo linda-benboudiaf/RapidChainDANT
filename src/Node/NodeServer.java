@@ -20,11 +20,14 @@ public class NodeServer extends Server {
 		super(port, pool, logLevel);
 		this.motd = "Welcome to RapidChain server 12.7";
 		this.factory = new NodeServerFactory();
+		
+		// tests routetable
 		try {
 			this.routeTable = new RouteTable();
 			this.routeTable.add(new Node(new Ip("128.78.51.131")));
 			this.routeTable.add(new Node(new Ip("192.23.34.55")));
 			this.routeTable.save();
+			this.routeTable = new RouteTable();
 			this.routeTable.load();
 		} catch (IOException e) {
 			this.error(e);
