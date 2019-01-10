@@ -20,7 +20,7 @@ public class Address {
 		if (o == null || o.getClass() != this.getClass())
 			return false;
 		Address a = (Address) o;
-		return host == a.host && port == a.port;
+		return host.equals(a.host) && port == a.port;
 	}
 
 	@Override

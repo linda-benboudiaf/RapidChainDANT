@@ -21,10 +21,16 @@ public class Node {
 	public Connection getConnection() {
 		try (Socket s = new Socket()) {
 			s.connect(addr.inet());
+			lastConnection = new Date();
 			return new Connection(s, 2);
 		} catch (IOException e) {
 			return null;
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return "node@" + this.addr;
 	}
 	
 
