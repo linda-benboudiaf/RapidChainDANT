@@ -4,6 +4,6 @@ public interface Storable {
 
 	boolean isEmpty();
 
-	void overwrite(Storable table);
+	void overwrite(Storable obj);
 
 }

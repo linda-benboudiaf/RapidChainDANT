@@ -11,7 +11,7 @@ public class RouteTable extends HashMap<Address, Node> implements Storable {
 	}
 
 	@Override
-	public void overwrite(Storable table) {
-		this.putAll((RouteTable) table);
+	public void overwrite(Storable obj) {
+		this.putAll((RouteTable) obj);
 	}
 }

@@ -8,10 +8,18 @@ import java.util.HashMap;
 
 import com.google.gson.GsonBuilder;
 
-
+/**
+ * Classe permettant de stocker des objets sous la formes de fichiers json
+ * @author Nicolas
+ *
+ */
 public class Store {
-	protected static final String dir = "data";
-	protected static HashMap<String, Storable> stores = new HashMap<>();
+	protected final String dir;
+	protected HashMap<String, Storable> stores = new HashMap<>();
+	
+	public Store(String dir) {
+		this.dir = dir;
+	}
 
 	public void register(Storable object, String file) throws IOException {
 		stores.put(file, object);
