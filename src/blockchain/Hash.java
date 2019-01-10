@@ -1,6 +1,9 @@
 package blockchain;
 import java.security.*;
 import com.google.gson.*;
+/**
+ * Class Hash: Create Hashes for Blocks
+ */
 public class Hash {
 	//On applique un hash type SHA256 sur une chaine de caractère. 
 	public static String ApplyHash(String input) {
