@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Date;
 
+import common.Debuggable;
 import tcp.Connection;
 
-public class Node {
+public class Node extends Debuggable {
 	Address addr;
 	protected Date lastConnection;
 
@@ -18,12 +19,17 @@ public class Node {
 		return addr;
 	}
 	
-	public Connection getConnection() {
+	public String request(String msg) {
 		try (Socket s = new Socket()) {
 			s.connect(addr.inet());
 			lastConnection = new Date();
-			return new Connection(s);
+			Connection c = new Connection(s);
+			c.send(msg);
+			String res = c.receive();
+			this.debug(res);
+			return res;
 		} catch (IOException e) {
+			this.error(e);
 			return null;
 		}
 	}
