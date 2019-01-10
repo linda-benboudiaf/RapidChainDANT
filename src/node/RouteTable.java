@@ -10,7 +10,7 @@ import java.util.HashMap;
 import com.google.gson.*;
 
 @SuppressWarnings("serial")
-public class RouteTable extends HashMap<Ip, Node> {
+public class RouteTable extends HashMap<Address, Node> {
 	protected static final String dataDir = "data";
 	protected static final String storeLocation = dataDir + "/routes.json";
 
@@ -24,7 +24,7 @@ public class RouteTable extends HashMap<Ip, Node> {
 	}
 
 	public void add(Node node) {
-		this.put(node.getIp(), node);
+		this.put(node.getAddr(), node);
 	}
 
 	public void save() throws IOException {

@@ -1,14 +1,30 @@
 package node;
 
-public class Node {
-	protected Ip ip;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.Date;
 
-	public Node(Ip ip) {
-		this.ip = ip;
+import tcp.Connection;
+
+public class Node {
+	Address addr;
+	protected Date lastConnection;
+
+	public Node(String host, int port) {
+		addr = new Address(host, port);
 	}
 
-	public Ip getIp() {
-		return ip;
+	public Address getAddr() {
+		return addr;
+	}
+	
+	public Connection getConnection() {
+		try (Socket s = new Socket()) {
+			s.connect(addr.inet());
+			return new Connection(s, 2);
+		} catch (IOException e) {
+			return null;
+		}
 	}
 	
 
