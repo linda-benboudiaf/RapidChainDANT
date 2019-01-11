@@ -2,6 +2,7 @@
 package blockchain;
 
 import java.util.Date;
+import node.Node;
 
 import common.Log;
 
@@ -15,6 +16,8 @@ public class Block {
 	private String data;
 	private long timeStamp;
 	private int nonce;
+	public Node validator; // on garde une trace du validateur = node qui a validé le block
+	
 
 	//Block Constructor.
 	public Block(String data,String previousHash ) {

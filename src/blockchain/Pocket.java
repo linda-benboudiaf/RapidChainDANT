@@ -7,16 +7,18 @@ import common.Log;
 import common.Requestable;
 import common.Serializable;
 import common.Storable;
+import node.Node;
 
 public class Pocket implements Storable, Requestable {
 	public ArrayList<Block> BlockChain = new ArrayList<Block>();
 	public int level = 5;
-	//L'idee est de crée une ArrayList afin de stocker les blocks puis l'importer dans un fichier JSON.
-	
+	// L'idee est de crée une ArrayList afin de stocker les blocks puis l'importer
+	// dans un fichier JSON.
+
 	public Pocket(int level) {
 		this.level = level;
 	}
-	
+
 	public Pocket() {
 	}
 
@@ -45,13 +47,25 @@ public class Pocket implements Storable, Requestable {
 		Log.debug(BCJson);
 
 	}
-	
+
+	public Boolean isBlockValid(Block newBlock, Block oldBlock) {
+		if (BlockChain.indexOf(newBlock) != BlockChain.indexOf(oldBlock) + 1)
+			return false;
+		if (oldBlock.hash != newBlock.previousHash)
+			return false;
+		if (newBlock.calculateHash() != newBlock.hash)
+			return false;
+		else
+			return true;
+	}
+
 	/*
 	 * Class isChainValid : Boolean. Une boucle qui parcours ArrayList afin de
 	 * verifie: Le Hash du block précédent est égale a la valeur de "PreviousHash"
 	 * du block en cours. Pareil pour le hash qui dèja stocké dans la chaine et
 	 * celui qu'on vient de calculé.
 	 */
+
 	public Boolean isChainValid() {
 		Block currentBlock;
 		Block previousBlock;
@@ -84,7 +98,7 @@ public class Pocket implements Storable, Requestable {
 		newBlock.mineBlock(level);
 		BlockChain.add(newBlock);
 	}
-	
+
 	@Override
 	public String toString() {
 		return BlockChain.toString();
