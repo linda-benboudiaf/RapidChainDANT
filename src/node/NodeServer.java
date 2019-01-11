@@ -13,4 +13,8 @@ public class NodeServer extends Server {
 		super(port, pool);
 		this.factory = new NodeServerFactory();
 	}
+	
+	public NodeServer(Node node, int pool) {
+		this(node.getAddr().port, pool);
+	}
 }
