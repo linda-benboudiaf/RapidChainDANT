@@ -43,7 +43,7 @@ public abstract class Log {
 	 */
 	public static void info(String msg, String prefix) {
 		if (Log.Level > 0) {
-			System.out.println(prefixString(prefix) + msg);
+			System.out.println("info: " + prefixString(prefix) + msg);
 		}
 	}
 	
@@ -61,7 +61,7 @@ public abstract class Log {
 	 * @param prefix
 	 */
 	public static void error(String msg, String prefix) {
-		System.err.println(prefixString(prefix) + msg);
+		System.err.println("err: " + prefixString(prefix) + msg);
 	}
 	
 	/**
@@ -78,7 +78,7 @@ public abstract class Log {
 	 * @param prefix
 	 */
 	public static void error(Exception e, String prefix) {
-		System.err.println(prefixString(prefix) + e.getMessage());
+		error(e.getMessage(), prefix);
 		if (Log.Level > 1) {
 			e.printStackTrace();
 		}

@@ -1,7 +1,9 @@
 import java.io.IOException;
 
 import blockchain.Pocket;
+import common.JsonSerialStrategy;
 import common.Log;
+import common.PrettyJsonSerialStrategy;
 import common.Store;
 import node.Node;
 import node.NodeServer;
@@ -27,14 +29,14 @@ public class RunTests {
 			routeTable = new RouteTable();
 			routeTable.add(new Node("128.78.51.131", 3032));
 			routeTable.add(new Node("localhost", 3023));
-			store.register(routeTable, "routes");
+			store.register(routeTable, "routes", new JsonSerialStrategy());
 			store.save("routes");
 			store.load("routes");
 			
 			//tests pocket
 			pocket = new Pocket(4);
 			pocket.main();
-			store.register(pocket, "pocket");
+			store.register(pocket, "pocket", new PrettyJsonSerialStrategy());
 			store.save("pocket");
 			store.load("pocket");
 			

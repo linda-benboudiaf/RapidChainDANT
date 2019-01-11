@@ -1,12 +1,13 @@
 package common;
 
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 
-import com.google.gson.GsonBuilder;
+import javafx.util.Pair;
 
 /**
  * Classe permettant de stocker des objets sous la formes de fichiers json
@@ -15,14 +16,14 @@ import com.google.gson.GsonBuilder;
  */
 public class Store {
 	protected final String dir;
-	protected HashMap<String, Storable> stores = new HashMap<>();
+	protected HashMap<String, Pair<Storable, SerialStrategy>> stores = new HashMap<>();
 	
 	public Store(String dir) {
 		this.dir = dir;
 	}
 
-	public void register(Storable object, String file) throws IOException {
-		stores.put(file, object);
+	public void register(Storable object, String file, SerialStrategy strat) throws IOException {
+		stores.put(file, new Pair<Storable, SerialStrategy> (object, strat));
 		checkFile(file);
 	}
 
@@ -38,12 +39,11 @@ public class Store {
 	}
 
 	public void save(String name) throws IOException {
-		Storable obj = stores.get(name);
+		Pair<Storable, SerialStrategy> pair = stores.get(name);
+		Storable obj = pair.getKey();
+		SerialStrategy strat = pair.getValue();
 		try (FileWriter fw = new FileWriter(name2path(name))) {
-			String json = new GsonBuilder()
-					.enableComplexMapKeySerialization()
-					.create()
-					.toJson(obj);
+			String json = strat.serialize(obj);
 			fw.write(json);
 		}
 
@@ -56,14 +56,13 @@ public class Store {
 	}
 
 	public void load(String name) throws IOException {
-		Storable obj = stores.get(name);
-		try (FileReader fr = new FileReader(name2path(name))) {
-			Storable table = new GsonBuilder()
-					.enableComplexMapKeySerialization()
-					.create()
-					.fromJson(fr, obj.getClass());
-			if (table != null && !table.isEmpty()) {
-				obj.overwrite(table);
+		Pair<Storable, SerialStrategy> pair = stores.get(name);
+		Storable target = pair.getKey();
+		SerialStrategy strat = pair.getValue();
+		try (InputStream fi = new FileInputStream(name2path(name))) {
+			Storable obj = (Storable) strat.unserialize(fi, target);
+			if (obj != null && !obj.isEmpty()) {
+				target.overwrite(obj);
 			}
 		}
 	}
@@ -75,6 +74,7 @@ public class Store {
 	}
 	
 	protected String name2path(String file) {
-		return  dir + "/" + file + ".json";
+		String ext = stores.get(file).getValue().ext();
+		return  dir + "/" + file + "." + ext;
 	}
 }

@@ -1,8 +1,6 @@
 package common;
 
-public interface Storable {
-
-	boolean isEmpty();
+public interface Storable extends Serializable{
 
 	void overwrite(Storable obj);
 
