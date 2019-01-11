@@ -14,6 +14,7 @@ public class Identity  implements Storable{
 		
 	public void generateKeyPair() {
 		try {
+			Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider()); 
 			KeyPairGenerator keyGen = KeyPairGenerator.getInstance("ECDSA","BC");
 			SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
 			ECGenParameterSpec ecSpec = new ECGenParameterSpec("prime192v1");
@@ -43,8 +44,8 @@ public class Identity  implements Storable{
 	}
 	public static void main (String[] args) {
 		Identity i = new Identity(); 
-		System.out.println(i.privateKey);
-		System.out.println(i.publicKey);
+		System.out.println("Private Key °°°" + i.privateKey);
+		System.out.println("Public Key °°°°" + i.publicKey);
 		
 	}
 }
