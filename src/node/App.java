@@ -1,3 +1,4 @@
+package node;
 import java.io.IOException;
 
 import blockchain.Identity;
@@ -7,13 +8,11 @@ import common.JsonSerialStrategy;
 import common.Log;
 import common.PrettyJsonSerialStrategy;
 import common.Store;
-import node.Node;
-import node.NodeServer;
-import node.RouteTable;
 
 public class App extends Debuggable implements Runnable {
 	private Node node;
 	public static volatile Store store = new Store("data");
+	protected boolean runtests = false;
 	protected RouteTable routeTable;
 	protected Identity id; 
 	protected Pocket pocket;
@@ -27,10 +26,15 @@ public class App extends Debuggable implements Runnable {
 		Log.start(store, 1);
 
 	}
+	
+	public App(int port, boolean runtests) {
+		this(port);
+		Log.setLevel(2);
+		this.runtests = runtests;
+	}
 
 	@Override
 	public void run() {
-		Log.start(new Store("data"), 1);
 		new Thread(new NodeServer(node, 20)).start();
 		try {
 			// tests routetable
@@ -45,13 +49,52 @@ public class App extends Debuggable implements Runnable {
 				id.generateKeyPair();
 				store.save("identity");
 			}
+			
 			pocket = new Pocket(4);
 			store.register(pocket, "pocket", new PrettyJsonSerialStrategy());
-			store.load("pocket");
+//			store.load("pocket");
+			
+			if (runtests) {
+				runTests();
+			}
 
 		} catch (IOException e) {
 			Log.error(e);
 		}
+	}
+	
+	protected void runTests() {
+
+		// tests
+		try {
+			
+			//tests routetable
+//			routeTable.add(new Node("128.78.51.131", 3032));
+			routeTable.add(new Node("localhost", 3023));
+			store.register(routeTable, "routes", new JsonSerialStrategy());
+			store.save("routes");
+			store.load("routes");
+			
+			//tests pocket
+			pocket.main();
+			store.register(pocket, "pocket", new PrettyJsonSerialStrategy());
+//			store.save("pocket");
+//			store.load("pocket");
+			
+		} catch (IOException e) {
+			Log.error(e);
+		}
+		
+		
+		Log.debug(routeTable);
+		Log.debug(pocket);
+		Log.debug(pocket.isChainValid());
+		RouteTable test = (RouteTable) routeTable.requestAll(new RouteTable());
+		Log.debug(test);
+		Pocket test2 = (Pocket) routeTable.requestAll(new Pocket());
+		Log.debug(test2);
+		routeTable.putAll(test);
+		Log.debug(routeTable);
 	}
 
 }
