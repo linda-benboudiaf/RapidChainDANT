@@ -17,6 +17,7 @@ public class Block {
 	private long timeStamp;
 	private int nonce;
 	public Node validator; // on garde une trace du validateur = node qui a validé le block
+	public int reputation; 
 	
 
 	//Block Constructor.
@@ -25,6 +26,7 @@ public class Block {
 		this.previousHash = previousHash;
 		this.timeStamp = new Date().getTime();
 		this.hash = calculateHash(); // sera appliquer une fois les autres valuers sont initialsé.
+		this.reputation=0; 
 	}
 
 	// Calculate new hash based on blocks contents

@@ -115,6 +115,7 @@ public class Pocket implements Storable, Requestable {
 		BlockChain = p.BlockChain;
 	}
 
+
 	@Override
 	public String command() {
 		return "pocket";

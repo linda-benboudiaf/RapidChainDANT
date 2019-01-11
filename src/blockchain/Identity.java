@@ -2,12 +2,13 @@ package blockchain;
 
 import java.security.*;
 import java.security.spec.ECGenParameterSpec;
-
-public class Wallet {
+import common.Serializable;
+import common.Storable;
+public class Identity  implements Storable{
 	public PrivateKey privateKey;
 	public PublicKey publicKey;
 	
-	public Wallet(){
+	public Identity(){
 		generateKeyPair();	
 	}
 		
@@ -26,7 +27,24 @@ public class Wallet {
 			throw new RuntimeException(e);
 		}
 }
-	
-	
 
+	@Override
+	public boolean isEmpty() {
+		if (privateKey==null);  
+		if (publicKey==null);
+		return false;
+	}
+
+	@Override
+	public void overwrite(Serializable obj) {
+		Identity i = (Identity) obj; 
+		privateKey = i.privateKey; 
+		publicKey = i.publicKey; 		
+	}
+	public static void main (String[] args) {
+		Identity i = new Identity(); 
+		System.out.println(i.privateKey);
+		System.out.println(i.publicKey);
+		
+	}
 }
