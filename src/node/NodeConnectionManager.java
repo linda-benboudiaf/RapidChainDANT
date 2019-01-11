@@ -1,6 +1,7 @@
 package node;
 
 
+import blockchain.Pocket;
 import common.JsonSerialStrategy;
 import tcp.Connection;
 import tcp.ConnectionManager;
@@ -27,6 +28,10 @@ public class NodeConnectionManager extends ConnectionManager {
 				routeTable.add(new Node("10.0.25.113", 3032));
 				routeTable.add(new Node("10.0.25.114", 3023));
 				return new JsonSerialStrategy().serialize(routeTable);
+			case "pocket":
+				Pocket pocket = new Pocket(2);
+				pocket.main();
+				return new JsonSerialStrategy().serialize(pocket);
 			default:
 				return super.response(msg);
 		}

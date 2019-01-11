@@ -45,10 +45,14 @@ public class RunTests {
 		}
 		
 		
-		Log.info(routeTable.toString());
-		Log.info(pocket.toString());
+		Log.debug(routeTable);
+		Log.debug(pocket);
 		Log.debug(pocket.isChainValid());
 		RouteTable test = (RouteTable) routeTable.requestAll(new RouteTable());
 		Log.debug(test);
+		Pocket test2 = (Pocket) routeTable.requestAll(new Pocket());
+		Log.debug(test2);
+		routeTable.putAll(test);
+		Log.debug(routeTable);
 	}
 }

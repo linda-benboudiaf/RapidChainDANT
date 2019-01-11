@@ -30,7 +30,7 @@ public class Node extends Debuggable {
 			NodeConnection c = (NodeConnection) factory.createConn(s, this.prefix);
 			c.setPrefix(prefix);
 			c.send(obj.command());
-			Requestable res = c.receive(new RouteTable());
+			Requestable res = c.receive(obj);
 			this.debug(res);
 			c.send(Protocol.exit);
 			c.receive();

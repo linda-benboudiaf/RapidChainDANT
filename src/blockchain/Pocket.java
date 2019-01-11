@@ -4,10 +4,11 @@ import java.util.*;
 import com.google.gson.*;
 
 import common.Log;
+import common.Requestable;
 import common.Serializable;
 import common.Storable;
 
-public class Pocket implements Storable {
+public class Pocket implements Storable, Requestable {
 	public ArrayList<Block> BlockChain = new ArrayList<Block>();
 	public int level = 5;
 	//L'idee est de crée une ArrayList afin de stocker les blocks puis l'importer dans un fichier JSON.
@@ -98,5 +99,10 @@ public class Pocket implements Storable {
 	public void overwrite(Serializable obj) {
 		Pocket p = (Pocket) obj;
 		BlockChain = p.BlockChain;
+	}
+
+	@Override
+	public String command() {
+		return "pocket";
 	}
 }
