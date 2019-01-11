@@ -1,5 +1,6 @@
 /bin/
 /data/*
+!README.md
 .metadata
 .DS_Store
 desktop.ini

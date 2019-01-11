@@ -10,4 +10,8 @@ public abstract class SerialStrategy {
 	public abstract Serializable unserialize(String str, Serializable target);
 	
 	public abstract String ext();
+	
+	public boolean writeMode() {
+		return false;
+	}
 }
