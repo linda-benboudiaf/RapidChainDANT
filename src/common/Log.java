@@ -85,7 +85,7 @@ public abstract class Log {
 	}
 	
 	private static String prefixString(String prefix) {
-		String[] parts = prefix.split("\\.");
+		String[] parts = prefix.split("/");
 		return "["+ String.join("][", parts) + "] ";
 	}
 

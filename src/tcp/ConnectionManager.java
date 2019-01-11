@@ -12,7 +12,7 @@ public class ConnectionManager extends Debuggable implements Callable<String> {
 	protected String exitMessage = "disconnected";
 
 	public ConnectionManager(Connection client, String id, String type) {
-		super(type + ".CLIENT" + id);
+		super(type + "/CLIENT" + id);
 		client.setPrefix(this.prefix);
 		this.client = client;
 		this.id = id;

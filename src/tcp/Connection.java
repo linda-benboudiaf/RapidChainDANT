@@ -35,7 +35,7 @@ public class Connection extends IOTransmitter {
 	}
 	
 	public void setPrefix(String prefix) {
-		this.prefix = prefix + ".STREAM";
+		this.prefix = prefix + "/STREAM";
 	}
 
 }

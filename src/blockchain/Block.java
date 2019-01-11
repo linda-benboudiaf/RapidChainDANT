@@ -3,6 +3,8 @@ package blockchain;
 
 import java.util.Date;
 
+import common.Log;
+
 /**
  * Class Block {@DATA: date, number}, {@PreviousHash}, {@HashOfCurrentBlock},
  */
@@ -42,7 +44,7 @@ public class Block {
 			nonce ++;
 			hash = calculateHash();
 		}
-		System.out.println("Block Mined!!! : " + hash);
+		Log.debug("Block Mined!!! : " + hash);
 	}
 
 	@Override

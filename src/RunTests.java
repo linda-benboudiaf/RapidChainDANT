@@ -25,14 +25,14 @@ public class RunTests {
 			
 			//tests routetable
 			routeTable = new RouteTable();
-//			routeTable.add(new Node("128.78.51.131", 3032));
+			routeTable.add(new Node("128.78.51.131", 3032));
 			routeTable.add(new Node("localhost", 3023));
 			store.register(routeTable, "routes");
 			store.save("routes");
 			store.load("routes");
 			
 			//tests pocket
-			pocket = new Pocket();
+			pocket = new Pocket(4);
 			pocket.main();
 			store.register(pocket, "pocket");
 			store.save("pocket");

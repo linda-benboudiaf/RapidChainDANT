@@ -25,7 +25,8 @@ public class Node extends Debuggable {
 		try (Socket s = new Socket()) {
 			s.connect(addr.inet());
 			lastConnection = new Date();
-			Connection c = new Connection(s, this.prefix + ".conn");
+			Connection c = new Connection(s);
+			c.setPrefix(prefix);
 			c.send(msg);
 			String res = c.receive();
 			this.debug(res);
