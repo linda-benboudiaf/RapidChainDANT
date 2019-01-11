@@ -41,8 +41,8 @@ public class Server extends Debuggable implements Runnable {
 				this.info("new connection: " + number);
 
 				// management of new connection
-				Connection client = this.factory.createClient(sock, this.prefix);
-				ConnectionManager cm = this.factory.createClientManager(client, Integer.toString(number), this.prefix);
+				Connection client = this.factory.createConn(sock, this.prefix);
+				ConnectionManager cm = this.factory.createConnManager(client, Integer.toString(number), this.prefix);
 				this.executor.submit(cm);
 				
 				// the client is managed separately so we can accept a new connection

@@ -4,6 +4,7 @@ import java.util.*;
 import com.google.gson.*;
 
 import common.Log;
+import common.Serializable;
 import common.Storable;
 
 public class Pocket implements Storable {
@@ -94,7 +95,7 @@ public class Pocket implements Storable {
 	}
 
 	@Override
-	public void overwrite(Storable obj) {
+	public void overwrite(Serializable obj) {
 		Pocket p = (Pocket) obj;
 		BlockChain = p.BlockChain;
 	}

@@ -5,12 +5,14 @@ import java.net.Socket;
 import java.util.Date;
 
 import common.Debuggable;
+import common.Requestable;
 import tcp.Protocol;
-import tcp.Connection;
+import tcp.ServerFactory;
 
 public class Node extends Debuggable {
-	Address addr;
+	protected Address addr;
 	protected Date lastConnection;
+	protected static ServerFactory factory = new NodeServerFactory();
 
 	public Node(String host, int port) {
 		addr = new Address(host, port);
@@ -21,14 +23,14 @@ public class Node extends Debuggable {
 		return addr;
 	}
 	
-	public String request(String msg) {
+	public Requestable request(Requestable obj) {
 		try (Socket s = new Socket()) {
 			s.connect(addr.inet());
 			lastConnection = new Date();
-			Connection c = new Connection(s);
+			NodeConnection c = (NodeConnection) factory.createConn(s, this.prefix);
 			c.setPrefix(prefix);
-			c.send(msg);
-			String res = c.receive();
+			c.send(obj.command());
+			Requestable res = c.receive(new RouteTable());
 			this.debug(res);
 			c.send(Protocol.exit);
 			c.receive();

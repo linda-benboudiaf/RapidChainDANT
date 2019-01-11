@@ -1,6 +1,7 @@
 package node;
 
 
+import common.JsonSerialStrategy;
 import tcp.Connection;
 import tcp.ConnectionManager;
 
@@ -21,8 +22,11 @@ public class NodeConnectionManager extends ConnectionManager {
 		switch (msg) {
 			case "game":
 				return "what game ?";
-			case "prout":
-				return "oh yeah baby";
+			case "iptables":
+				RouteTable routeTable = new RouteTable();
+				routeTable.add(new Node("10.0.25.113", 3032));
+				routeTable.add(new Node("10.0.25.114", 3023));
+				return new JsonSerialStrategy().serialize(routeTable);
 			default:
 				return super.response(msg);
 		}

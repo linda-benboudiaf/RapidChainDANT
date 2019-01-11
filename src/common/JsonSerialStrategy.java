@@ -30,5 +30,13 @@ public class JsonSerialStrategy extends SerialStrategy {
 		return "json";
 	}
 
+	@Override
+	public Serializable unserialize(String str, Serializable target) {
+		return new GsonBuilder()
+				.enableComplexMapKeySerialization()
+				.create()
+				.fromJson(str, target.getClass());
+	}
+
 
 }

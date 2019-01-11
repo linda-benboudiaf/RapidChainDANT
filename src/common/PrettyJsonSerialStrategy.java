@@ -32,5 +32,14 @@ public class PrettyJsonSerialStrategy extends SerialStrategy {
 		return "json";
 	}
 
+	@Override
+	public Serializable unserialize(String str, Serializable target) {
+		return new GsonBuilder()
+				.enableComplexMapKeySerialization()
+				.setPrettyPrinting()
+				.create()
+				.fromJson(str, target.getClass());
+	}
+
 
 }

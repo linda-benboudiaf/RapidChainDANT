@@ -1,26 +1,32 @@
 package node;
 import java.util.HashMap;
 
+import common.Requestable;
+import common.Serializable;
 import common.Storable;
 
 @SuppressWarnings("serial")
-public class RouteTable extends HashMap<Address, Node> implements Storable {
+public class RouteTable extends HashMap<Address, Node> implements Storable, Requestable {
 
 	public void add(Node node) {
 		this.put(node.getAddr(), node);
 	}
 	
-	public int requestAll(String msg) {
-		int count = 0;
+	public Requestable requestAll(Requestable obj) {
 		for (Node node : this.values()) {
-			node.request(msg);
-			count ++;
+			obj.overwrite(node.request(obj));
 		}
-		return count;
+		return obj;
+		
 	}
 
 	@Override
-	public void overwrite(Storable obj) {
+	public void overwrite(Serializable obj) {
 		this.putAll((RouteTable) obj);
+	}
+
+	@Override
+	public String command() {
+		return "iptables";
 	}
 }
