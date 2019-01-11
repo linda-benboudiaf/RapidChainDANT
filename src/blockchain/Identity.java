@@ -7,14 +7,10 @@ import common.Storable;
 public class Identity  implements Storable{
 	public PrivateKey privateKey;
 	public PublicKey publicKey;
-	
-	public Identity(){
-		generateKeyPair();	
-	}
 		
 	public void generateKeyPair() {
 		try {
-			Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider()); 
+			Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 			KeyPairGenerator keyGen = KeyPairGenerator.getInstance("ECDSA","BC");
 			SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
 			ECGenParameterSpec ecSpec = new ECGenParameterSpec("prime192v1");
@@ -31,9 +27,7 @@ public class Identity  implements Storable{
 
 	@Override
 	public boolean isEmpty() {
-		if (privateKey==null);  
-		if (publicKey==null);
-		return false;
+		return privateKey == null;
 	}
 
 	@Override

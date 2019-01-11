@@ -11,6 +11,10 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/home/lbenboudiaf/Bureau/RapidChainDANT/Lib/bcprov-jdk15on-157.jar"/>
+	<classpathentry kind="lib" path="Lib/bcprov-jdk15on-160.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

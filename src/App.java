@@ -1,6 +1,7 @@
 import java.io.IOException;
 
 import blockchain.Identity;
+import blockchain.IdentitySerialStrategy;
 import blockchain.Pocket;
 import common.Debuggable;
 import common.JsonSerialStrategy;
@@ -39,7 +40,7 @@ public class App extends Debuggable implements Runnable {
 			store.load("routes");
 
 			id = new Identity(); 
-			store.register(id, "identity", new PrettyJsonSerialStrategy());
+			store.register(id, "identity", new IdentitySerialStrategy());
 			store.load("identity");
 			if(id.isEmpty()) {
 				id.generateKeyPair();
