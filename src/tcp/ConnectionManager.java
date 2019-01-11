@@ -1,7 +1,5 @@
 package tcp;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.Callable;
 
 import common.Debuggable;
@@ -9,21 +7,19 @@ import common.Debuggable;
 public class ConnectionManager extends Debuggable implements Callable<String> {
 
 	protected Connection client;
-	protected String motd;
+	protected String motd = "Welcome to this server";
 	protected String id;
-	protected String[] exitCommands = {"exit"};
 	protected String exitMessage = "disconnected";
 
-	public ConnectionManager(Connection client, String motd, String id, String type) {
+	public ConnectionManager(Connection client, String id, String type) {
 		super(type + ".CLIENT" + id);
 		client.setPrefix(this.prefix);
 		this.client = client;
-		this.motd = motd;
 		this.id = id;
 	}
 
-	public ConnectionManager(Connection client, String motd, String id) {
-		this(client, motd, id, "");
+	public ConnectionManager(Connection client,  String id) {
+		this(client, id, "");
 	}
 
 	/**
@@ -34,20 +30,21 @@ public class ConnectionManager extends Debuggable implements Callable<String> {
 		String msg = "";
 
 		try {
-			answer(motd);
+			if (motd != null) {
+				answer(motd);
+			}
+			
 			// running server loop
 			while (true) {
 				msg = client.receive().toLowerCase();
-				List<String> exitcommands = Arrays.asList(this.exitCommands);
-				if (exitcommands.contains(msg)) {
+				if (Protocol.exit.equals(msg)) {
 					this.info("client disconnected");
 					break;
 				}
 				answer(this.response(msg));
 			}
 		} catch (Exception e) {
-//			e.printStackTrace();
-			error(e);
+			this.error(e);
 		}
 		
 		return onSuccess(msg);
@@ -64,7 +61,11 @@ public class ConnectionManager extends Debuggable implements Callable<String> {
 	}
 
 	protected void answer(String msg) {
-		client.send(msg + "\n" + this.prompt());
+		String prompt = this.prompt();
+		if (prompt != null) {
+			msg += "\n" + prompt;
+		}
+		client.send(msg);
 	}
 
 	protected String prompt() {

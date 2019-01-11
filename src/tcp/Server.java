@@ -18,7 +18,6 @@ import common.Debuggable;
  */
 public class Server extends Debuggable implements Runnable {
 	protected int port;
-	protected String motd = "Welcome to this server";
 	protected ThreadPoolExecutor executor;
 	protected ServerFactory factory;
 	protected int numThread = 0;
@@ -43,7 +42,7 @@ public class Server extends Debuggable implements Runnable {
 
 				// management of new connection
 				Connection client = this.factory.createClient(sock, this.prefix);
-				ConnectionManager cm = this.factory.createClientManager(client, motd, Integer.toString(number), this.prefix);
+				ConnectionManager cm = this.factory.createClientManager(client, Integer.toString(number), this.prefix);
 				this.executor.submit(cm);
 				
 				// the client is managed separately so we can accept a new connection

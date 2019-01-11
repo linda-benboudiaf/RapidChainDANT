@@ -6,9 +6,9 @@ import tcp.ConnectionManager;
 
 public class NodeConnectionManager extends ConnectionManager {
 
-	public NodeConnectionManager(Connection client, String motd, String id, String prefix) {
-		super(client, motd, id, prefix);
-		this.exitCommands = new String[] { "exit", "quit" };
+	public NodeConnectionManager(Connection client, String id, String prefix) {
+		super(client, id, prefix);
+		this.motd = null;
 	}
 
 	/**
@@ -26,5 +26,10 @@ public class NodeConnectionManager extends ConnectionManager {
 			default:
 				return super.response(msg);
 		}
+	}
+
+	@Override
+	protected String prompt() {
+		return null;
 	}
 }
