@@ -4,5 +4,5 @@ public interface Serializable {
 
 	boolean isEmpty();
 	
-	void overwrite(Serializable requestable);
+	void overwrite(Serializable obj);
 }

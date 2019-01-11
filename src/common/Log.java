@@ -1,12 +1,15 @@
 package common;
 
+import java.io.IOException;
 
 public abstract class Log {
 	protected static int Level = 0;
 	protected static String prefix = "LOG";
+	protected static Store store;
 	
-	public static void setLevel(int level) {
+	public static void start(Store store, int level) {
 		Log.Level = level;
+		Log.store = store;
 	}
 
 	/**
@@ -42,9 +45,11 @@ public abstract class Log {
 	 * @param prefix
 	 */
 	public static void info(String msg, String prefix) {
+		msg = "info: " + prefixString(prefix) + msg;
 		if (Log.Level > 0) {
-			System.out.println("info: " + prefixString(prefix) + msg);
+			System.out.println(msg);
 		}
+		append(msg);
 	}
 	
 	/**
@@ -61,7 +66,9 @@ public abstract class Log {
 	 * @param prefix
 	 */
 	public static void error(String msg, String prefix) {
-		System.err.println("err: " + prefixString(prefix) + msg);
+		msg = "err: " + prefixString(prefix) + msg;
+		System.err.println(msg);
+		append(msg);
 	}
 	
 	/**
@@ -87,6 +94,17 @@ public abstract class Log {
 	private static String prefixString(String prefix) {
 		String[] parts = prefix.split("/");
 		return "["+ String.join("][", parts) + "] ";
+	}
+	
+	private static void append(String msg) {
+		if (store != null) {
+			try {
+				LogLine line = new LogLine(msg);
+				store.register(line, "app", new LogSerialStrategy());
+				store.save("app");
+			} catch (IOException e) {
+			}
+		}
 	}
 
 }

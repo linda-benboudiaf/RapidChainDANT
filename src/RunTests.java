@@ -17,7 +17,7 @@ public class RunTests {
 	public static void main(String[] args) {
 		
 		// set loglevel to debug
-		Log.setLevel(2);
+		Log.start(store, 2);
 		
 		// runserver
 		new Thread(new NodeServer(3023, 20)).start();
