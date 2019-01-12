@@ -13,10 +13,10 @@ public class App extends Debuggable implements Runnable {
 	private Node node;
 	public static volatile Store store = new Store("data");
 	protected boolean runtests = false;
-	protected RouteTable routeTable;
-	protected Identity id; 
-	protected Pocket pocket;
-	protected NodeServer server;
+	protected static RouteTable routeTable;
+	protected static Identity id; 
+	protected static Pocket pocket;
+	protected static NodeServer server;
 
 	public App(int port) {
 		this.node = new Node("localhost", port);
@@ -71,13 +71,11 @@ public class App extends Debuggable implements Runnable {
 			//tests routetable
 //			routeTable.add(new Node("128.78.51.131", 3032));
 			routeTable.add(new Node("localhost", 3023));
-			store.register(routeTable, "routes", new JsonSerialStrategy());
 			store.save("routes");
 			store.load("routes");
 			
 			//tests pocket
 			pocket.main();
-			store.register(pocket, "pocket", new PrettyJsonSerialStrategy());
 //			store.save("pocket");
 //			store.load("pocket");
 			
