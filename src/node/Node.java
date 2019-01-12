@@ -15,8 +15,12 @@ public class Node extends Debuggable {
 	protected static ServerFactory factory = new NodeServerFactory();
 
 	public Node(String host, int port) {
-		addr = new Address(host, port);
-		prefix = this.toString();
+		this(new Address(host, port));
+	}
+	
+	public Node(Address addr) {
+		this.addr = addr;
+		this.prefix = this.toString();
 	}
 
 	public Address getAddr() {
