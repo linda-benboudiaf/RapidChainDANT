@@ -12,6 +12,7 @@ import tcp.ServerFactory;
 public class Node extends Debuggable {
 	protected Address addr;
 	protected Date lastConnection;
+	protected int fails = 0;
 	protected static ServerFactory factory = new NodeServerFactory();
 
 	public Node(String host, int port) {
@@ -32,6 +33,8 @@ public class Node extends Debuggable {
 			s.connect(addr.inet());
 			lastConnection = new Date();
 			NodeConnection c = (NodeConnection) factory.createConn(s, this.prefix);
+			c.send("pull");
+			c.receive();
 			c.setPrefix(prefix);
 			c.send(obj.command());
 			Requestable res = c.receive(obj);
@@ -40,6 +43,7 @@ public class Node extends Debuggable {
 			c.receive();
 			return res;
 		} catch (IOException e) {
+			this.fails ++;
 			this.error(e);
 			return null;
 		}

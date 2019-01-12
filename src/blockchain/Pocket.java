@@ -82,7 +82,7 @@ public class Pocket implements Storable, Requestable {
 		String BCJson = new GsonBuilder().setPrettyPrinting().create().toJson(getFullChain(hiestHead()));
 		System.out.println("BlockChain list:");
 		System.out.println(BCJson);
-		Log.debug("blockchain length: " + getChainLength(hiestHead()));
+		Log.debug("blockchain length: " + getFullChainHashes(hiestHead()).size());
 
 	}
 
@@ -113,17 +113,18 @@ public class Pocket implements Storable, Requestable {
 
 	}
 
-	public int getChainLength(Block head) {
+	public HashSet<String> getFullChainHashes(Block head) {
 		Stack<Block> stack = new Stack<Block>();
 		Block previous;
-		int count = 1;
+		HashSet<String> hashes = new HashSet<>();
+		hashes.add(head.hash);
 		stack.push(head);
 		while(!stack.empty()) {
 			head = stack.pop();
 			// try to get previous block from store
 			try {
 				previous = Block.get(head.previousHash);
-				count ++;
+				hashes.add(previous.hash);
 				if (!isGenesisBlock(previous)) {
 					stack.push(previous);
 				}
@@ -131,7 +132,7 @@ public class Pocket implements Storable, Requestable {
 				Log.error(e);
 			}
 		}
-		return count;
+		return hashes;
 	}
 
 	/**

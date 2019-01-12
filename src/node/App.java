@@ -16,11 +16,15 @@ public class App extends Debuggable implements Runnable {
 	public static volatile Store store = new Store("data");
 	protected boolean runtests = false;
 	protected Address addr;
-	protected static int defaultPort = 3023;
+	protected static final int defaultPort = 3023;
 	protected static RouteTable peers;
 	protected static Identity id; 
 	protected static Pocket pocket;
 	protected static NodeServer server;
+	
+	public App() {
+		this (defaultPort);
+	}
 
 	public App(int port) {
 		this.addr = new Address("localhost", port);
@@ -43,8 +47,8 @@ public class App extends Debuggable implements Runnable {
 		try {
 			// tests routetable
 			peers = new RouteTable();
-			store.register(peers, "routes", new JsonSerialStrategy());
-			store.load("routes");
+			store.register(peers, "peers", new JsonSerialStrategy());
+			store.load("peers");
 
 			id = new Identity(); 
 			store.register(id, "identity", new PrettyJsonSerialStrategy());

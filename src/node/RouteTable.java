@@ -7,6 +7,7 @@ import common.Storable;
 
 @SuppressWarnings("serial")
 public class RouteTable extends HashMap<Address, Node> implements Storable, Requestable {
+	public static final int tolerance = 3;
 
 	public void add(Node node) {
 		this.put(node.getAddr(), node);
@@ -25,8 +26,15 @@ public class RouteTable extends HashMap<Address, Node> implements Storable, Requ
 	}
 	
 	public Requestable requestAll(Requestable obj) {
+		int fails;
 		for (Node node : this.values()) {
-			obj.overwrite(node.request(obj));
+			fails = node.fails;
+			if (fails < tolerance) {
+				Requestable res = node.request(obj);
+				if (res != null) {
+					obj.overwrite(res);
+				}
+			}
 		}
 		return obj;
 		
@@ -39,6 +47,6 @@ public class RouteTable extends HashMap<Address, Node> implements Storable, Requ
 
 	@Override
 	public String command() {
-		return "iptables";
+		return "peers";
 	}
 }

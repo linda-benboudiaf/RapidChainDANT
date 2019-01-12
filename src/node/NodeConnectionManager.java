@@ -1,6 +1,8 @@
 package node;
 
 
+import java.io.IOException;
+
 import common.JsonSerialStrategy;
 import tcp.Connection;
 import tcp.ConnectionManager;
@@ -18,19 +20,31 @@ public class NodeConnectionManager extends ConnectionManager {
 	 * @param client
 	 */
 	@Override
-	protected String response(String msg) {
-		switch (msg) {
-			case "game":
-				return "what game ?";
-			case "iptables":
-				RouteTable routeTable = new RouteTable();
-				routeTable.add(new Node("10.0.25.113", 3032));
-				routeTable.add(new Node("10.0.25.114", 3023));
-				return new JsonSerialStrategy().serialize(routeTable);
+	protected String response(String msg) throws IOException {
+		if (msg.equals("pull")) {
+			client.send("what");
+			msg = client.receive();
+			switch (msg) {
+				case "peers":
+					return new JsonSerialStrategy().serialize(App.peers);
+				case "pocket":
+					return new JsonSerialStrategy().serialize(App.pocket);
+				default:
+					return super.response(msg);
+			}
+		} else if (msg.equals("push")) {
+			client.send("what");
+			msg = client.receive();
+			switch (msg) {
+			case "peers":
+				return "ok";
 			case "pocket":
-				return new JsonSerialStrategy().serialize(App.pocket);
+				return "ok";
 			default:
 				return super.response(msg);
+		}
+		} else {
+			return super.response(msg);
 		}
 	}
 
