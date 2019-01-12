@@ -1,14 +1,15 @@
 
 package blockchain;
 
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.Date;
+
+import node.App;
 import node.Node;
 import common.JsonSerialStrategy;
 import common.Log;
 import common.Serializable;
 import common.Storable;
-import common.Store;
 
 /**
  * Class Block {@DATA: date, number}, {@PreviousHash}, {@HashOfCurrentBlock},
@@ -36,17 +37,24 @@ public class Block implements Storable{
 		this.hash = calculateHash(); // sera appliquer une fois les autres valuers sont initialsé.
 		mineBlock(Pocket.level);
 	}
-	
+
 	/**
-	 * Constructor for already minedBlocks
-	 * @param store
+	 * Constructor for already mined blocks
 	 * @param hash
-	 * @throws IOException
 	 */
-	public Block(Store store, String hash) throws IOException {
+	private Block(String hash) {
 		this.hash = hash;
-		store.register(this, file(), new JsonSerialStrategy());
-		store.load(file());
+	}
+
+	/**
+	 * Get a block from the store
+	 * @param hash
+	 * @throws FileNotFoundException
+	 */
+	public static Block get(String hash) throws FileNotFoundException {
+		Block b = new Block(hash);
+		App.store.get(b, b.file(), new JsonSerialStrategy());
+		return b;
 	}
 	
 	public String file() {

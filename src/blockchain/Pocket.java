@@ -66,7 +66,7 @@ public class Pocket implements Storable, Requestable {
 		}
 	}
 
-	public void main() {
+	public void tests() {
 
 		addBlock(new Block("Im the second 2", lastHash()));
 
@@ -80,8 +80,9 @@ public class Pocket implements Storable, Requestable {
 		 * SetPrettyPrinting() veut dire que le Output est un JSON.
 		 */
 		String BCJson = new GsonBuilder().setPrettyPrinting().create().toJson(getFullChain(hiestHead()));
-		Log.debug("BlockChain list:");
-		Log.debug(BCJson);
+		System.out.println("BlockChain list:");
+		System.out.println(BCJson);
+		Log.debug("blockchain length: " + getChainLength(hiestHead()));
 
 	}
 
@@ -93,32 +94,44 @@ public class Pocket implements Storable, Requestable {
 	 */
 	public ArrayList<Block> getFullChain(Block head) {
 		ArrayList<Block> prevs = new ArrayList<Block>();
+		Stack<Block> stack = new Stack<Block>();
 		prevs.add(head);
-		try {
-			Block prev = new Block(App.store, head.previousHash);
-			if (prev.previousHash.equals("0")) {
+		stack.push(head);
+		while(!stack.empty()) {
+			head = stack.pop();
+			try {
+				Block prev = Block.get(head.previousHash);
 				prevs.add(prev);
-			} else {
-				prevs.addAll(getFullChain(prev));
+				if (!isGenesisBlock(prev)) {
+					stack.push(prev);
+				}
+			} catch (IOException e) {
+				Log.error(e);
 			}
-			return prevs;
-		} catch (IOException e) {
-			Log.error(e);
-			return null;
 		}
+		return prevs;
 
 	}
 
 	public int getChainLength(Block head) {
+		Stack<Block> stack = new Stack<Block>();
 		Block previous;
-		// try to get previous block from store
-		try {
-			previous = new Block(App.store, head.previousHash);
-		} catch (IOException e) {
-			Log.error(e);
-			return 1;
+		int count = 1;
+		stack.push(head);
+		while(!stack.empty()) {
+			head = stack.pop();
+			// try to get previous block from store
+			try {
+				previous = Block.get(head.previousHash);
+				count ++;
+				if (!isGenesisBlock(previous)) {
+					stack.push(previous);
+				}
+			} catch (IOException e) {
+				Log.error(e);
+			}
 		}
-		return getChainLength(previous) + 1;
+		return count;
 	}
 
 	/**
@@ -142,24 +155,33 @@ public class Pocket implements Storable, Requestable {
 	 * @return
 	 */
 	public Boolean isChainValid(Block head) {
+		Stack<Block> stack = new Stack<Block>();
 		Block previous;
-		// try to get previous block from store
-		try {
-			previous = new Block(App.store, head.previousHash);
-		} catch (IOException e) {
-			Log.error(e);
-			return false;
+		// use explicit stack call instead of recursivity to save memory
+		stack.push(head);
+		while(!stack.empty()) {
+			head = stack.pop();
+			// try to get previous block from store
+			try {
+				previous = Block.get(head.previousHash);
+			} catch (IOException e) {
+				Log.error(e);
+				return false;
+			}
+			// check if block is totally valid
+			if (!isBlockValid(head, previous)) {
+				return false;
+			}
+			// if not genesis block, check if previous blocks are valid
+			if (!isGenesisBlock(previous)) {
+				stack.push(previous);
+			} 
 		}
-		// check if block is totally valid
-		if (!isBlockValid(head, previous)) {
-			return false;
-		}
-		// if not genesis block, check if previous blocks are valid
-		if (!previous.previousHash.equals("0")) {
-			return isChainValid(previous);
-		} else {
-			return true;
-		}
+		return true;
+	}
+
+	private boolean isGenesisBlock(Block block) {
+		return block.previousHash.equals("0");
 	}
 
 	/**

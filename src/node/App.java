@@ -75,7 +75,7 @@ public class App extends Debuggable implements Runnable {
 			store.load("routes");
 			
 			//tests pocket
-			pocket.main();
+			pocket.tests();
 			store.save("pocket");
 //			store.load("pocket");
 			
