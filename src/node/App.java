@@ -52,7 +52,7 @@ public class App extends Debuggable implements Runnable {
 			
 			pocket = new Pocket(4);
 			store.register(pocket, "pocket", new PrettyJsonSerialStrategy());
-//			store.load("pocket");
+			store.load("pocket");
 			
 			if (runtests) {
 				runTests();
@@ -76,7 +76,7 @@ public class App extends Debuggable implements Runnable {
 			
 			//tests pocket
 			pocket.main();
-//			store.save("pocket");
+			store.save("pocket");
 //			store.load("pocket");
 			
 		} catch (IOException e) {

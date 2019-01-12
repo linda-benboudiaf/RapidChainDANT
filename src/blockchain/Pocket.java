@@ -14,7 +14,6 @@ import node.App;
 public class Pocket implements Storable, Requestable {
 	public ArrayList<Block> heads = new ArrayList<Block>();
 	public static int level = 5;
-	public static Block genesis = new Block("Im the first 1 Im the Genesis Block", "0");
 	
 	// L'idee est de crée une ArrayList afin de stocker les blocks puis l'importer
 	// dans un fichier JSON.
@@ -39,6 +38,7 @@ public class Pocket implements Storable, Requestable {
 		for (Block head : heads) {
 			return head;
 		}
+		Block genesis = new Block("Im the first 1 Im the Genesis Block", "0");
 		addBlock(genesis);
 		return genesis;
 	}
@@ -71,8 +71,6 @@ public class Pocket implements Storable, Requestable {
 		addBlock(new Block("Im the second 2", lastHash()));
 
 		addBlock(new Block("Im the third 3", lastHash()));
-		
-		addBlock(new Block("Im the fourth 4", lastHash()));
 
 		// On verifie après le minage que la chaine est toujours valide.
 		Log.debug("Is the chaine always valid " + isChainValid());
@@ -82,7 +80,7 @@ public class Pocket implements Storable, Requestable {
 		 * SetPrettyPrinting() veut dire que le Output est un JSON.
 		 */
 		String BCJson = new GsonBuilder().setPrettyPrinting().create().toJson(getFullChain(hiestHead()));
-		Log.debug("\n BlockChain list:");
+		Log.debug("BlockChain list:");
 		Log.debug(BCJson);
 
 	}
@@ -198,7 +196,7 @@ public class Pocket implements Storable, Requestable {
 
 	@Override
 	public String toString() {
-		return heads.toString();
+		return "heads: " + heads.toString();
 	}
 
 	@Override
