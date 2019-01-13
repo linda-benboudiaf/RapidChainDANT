@@ -1,13 +1,9 @@
 package node;
 import java.io.IOException;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 import blockchain.Identity;
 import blockchain.Pocket;
 import common.Debuggable;
-import common.JsonSerialStrategy;
 import common.Log;
 import common.PrettyJsonSerialStrategy;
 import common.Store;
@@ -17,7 +13,7 @@ public class App extends Debuggable implements Runnable {
 	protected boolean runtests = false;
 	protected Address addr;
 	protected static final int defaultPort = 3023;
-	protected static RouteTable peers;
+	protected static PeerTable peers;
 	protected static Identity id; 
 	protected static Pocket pocket;
 	protected static NodeServer server;
@@ -46,8 +42,9 @@ public class App extends Debuggable implements Runnable {
 		new Thread(new NodeServer(addr, 20)).start();
 		try {
 			// tests routetable
-			peers = new RouteTable();
-			store.register(peers, "peers", new JsonSerialStrategy());
+			peers = new PeerTable();
+			peers.initFromDns();
+			store.register(peers, "peers", new PrettyJsonSerialStrategy());
 			store.load("peers");
 
 			id = new Identity(); 
@@ -73,7 +70,6 @@ public class App extends Debuggable implements Runnable {
 	
 	protected void runTests() {
 		
-		initPeersFromDns();
 
 		// tests
 		try {
@@ -89,34 +85,20 @@ public class App extends Debuggable implements Runnable {
 			store.save("pocket");
 //			store.load("pocket");
 			
+			Log.debug(peers);
+			Log.debug(pocket);
+			Log.debug(pocket.isChainValid());
+			PeerTable test = (PeerTable) peers.requestAll(new PeerTable());
+			Log.debug(test);
+			Pocket test2 = (Pocket) peers.requestAll(new Pocket());
+			Log.debug(test2);
+			peers.putAll(test);
+			store.save("peers");
+			Log.debug(peers);
+			
 		} catch (IOException e) {
 			Log.error(e);
 		}
-		
-		
-		Log.debug(peers);
-		Log.debug(pocket);
-		Log.debug(pocket.isChainValid());
-		RouteTable test = (RouteTable) peers.requestAll(new RouteTable());
-		Log.debug(test);
-		Pocket test2 = (Pocket) peers.requestAll(new Pocket());
-		Log.debug(test2);
-		peers.putAll(test);
-		Log.debug(peers);
-	}
-	
-	protected void initPeersFromDns() {
-		try {
-            InetAddress[] ipAddr = InetAddress.getAllByName("blurchain.club1.fr");
-            for(int i=0; i < ipAddr.length ; i++) {
-                if (ipAddr[i] instanceof Inet4Address) {
-                    Log.debug("IPv4 : " + ipAddr[i].getHostAddress());
-                    peers.addIp(ipAddr[i].getHostAddress());
-                }
-            }
-        } catch (UnknownHostException e) {
-            Log.error(e);
-        }
 	}
 
 }

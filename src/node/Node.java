@@ -2,7 +2,9 @@ package node;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import common.Debuggable;
 import common.Requestable;
@@ -11,8 +13,8 @@ import tcp.ServerFactory;
 
 public class Node extends Debuggable {
 	protected Address addr;
-	protected Date lastConnection;
-	protected int fails = 0;
+	protected Long lastConnection;
+	protected List<Long> fails = new ArrayList<Long>();
 	protected static ServerFactory factory = new NodeServerFactory();
 
 	public Node(String host, int port) {
@@ -28,10 +30,22 @@ public class Node extends Debuggable {
 		return addr;
 	}
 	
+	public int nbFailsThisWeek() {
+		int nbFails = 0;
+		Long now = new Date().getTime();
+		for (Long date : fails) {
+			int diff = now.compareTo(date);
+			if (diff > 1000 * 60 * 60 * 24 * 7) {
+				nbFails ++;
+			}
+		}
+		return nbFails;
+	}
+	
 	public Requestable request(Requestable obj) {
 		try (Socket s = new Socket()) {
 			s.connect(addr.inet());
-			lastConnection = new Date();
+			lastConnection = new Date().getTime();
 			NodeConnection c = (NodeConnection) factory.createConn(s, this.prefix);
 			c.send("pull");
 			c.receive();
@@ -43,7 +57,7 @@ public class Node extends Debuggable {
 			c.receive();
 			return res;
 		} catch (IOException e) {
-			this.fails ++;
+			this.fails.add(new Date().getTime());
 			this.error(e);
 			return null;
 		}
