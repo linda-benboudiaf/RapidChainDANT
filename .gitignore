@@ -1,4 +1,5 @@
-/bin/
+/bin/*
+!*.jar
 /data/*
 !README.md
 .metadata
