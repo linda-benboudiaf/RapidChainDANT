@@ -81,8 +81,8 @@ public class App extends Debuggable implements Runnable {
 			//tests routetable
 //			routeTable.add(new Node("128.78.51.131", 3032));
 			peers.add(new Node("localhost", 3023));
-			store.save("routes");
-			store.load("routes");
+			store.save("peers");
+			store.load("peers");
 			
 			//tests pocket
 			pocket.tests();
