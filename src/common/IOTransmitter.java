@@ -2,7 +2,10 @@ package common;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 
 /**
  * Class to easily send and receive message trough input and output streams
@@ -15,6 +18,22 @@ public class IOTransmitter extends Debuggable {
 	
 	public IOTransmitter(String type) {
 		super(type);
+	}
+
+	public OutputStream getOs() {
+		return os;
+	}
+
+	public InputStream getIs() {
+		return is;
+	}
+	
+	public ObjectOutputStream getOos() throws IOException {
+		return new ObjectOutputStream(os);
+	}
+	
+	public ObjectInputStream getOis() throws IOException {
+		return new ObjectInputStream(is);
 	}
 
 	public void setOs(OutputStream os) {
@@ -30,30 +49,29 @@ public class IOTransmitter extends Debuggable {
 	 * @return the message received
 	 * @throws IOException
 	 */
-	public String receive() throws IOException {
-		int i;
-		StringBuffer buff = new StringBuffer();
-		while ((i = this.is.read()) != -1 && i != 4) { // 4 is the end of transmission byte
-			buff.append((char) i); // add the character to the buffer
+	public Serializable receive() {
+		try {
+			Serializable obj = (Serializable) this.getOis().readObject();
+			this.debug("receive message: \"" + obj.toString() + "\"");
+			return obj;
+		} catch (ClassNotFoundException e) {
+			this.error(e);
+		} catch (IOException e) {
+			this.error(e);
 		}
-		String msg = buff.toString(); // convert buffer to string)
-		this.debug("receive message: \"" + msg + "\"");
-		return msg;
+		return null;
 	}
 
 	/**
 	 * Send a message
 	 * @param msg the message
 	 */
-	public void send(String msg) {
+	public void send(Serializable obj) {
 		try {
-			this.debug("sending message: \"" + msg + "\"");
-			byte[] bytes = msg.getBytes();
-			this.os.write(bytes);
-			this.os.write(4); // means end of transmission
+			this.debug("sending message: \"" + obj.toString() + "\"");
+			this.getOos().writeObject(obj);
 		} catch (IOException e) {
-			this.debug("error while sending message");
-			e.printStackTrace();
+			this.error(e);
 		}
 	}
 }

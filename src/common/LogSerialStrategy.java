@@ -9,12 +9,12 @@ import com.google.gson.GsonBuilder;
 public class LogSerialStrategy extends SerialStrategy {
 
 	@Override
-	public String serialize(Serializable obj) {
+	public String serialize(Storable obj) {
 		return obj.toString();
 	}
 
 	@Override
-	public Serializable unserialize(InputStream str, Serializable target) {
+	public Storable unserialize(InputStream str, Storable target) {
 		return null;
 	}
 
@@ -24,7 +24,7 @@ public class LogSerialStrategy extends SerialStrategy {
 	}
 
 	@Override
-	public Serializable unserialize(String str, Serializable target) {
+	public Storable unserialize(String str, Storable target) {
 		return null;
 	}
 	
@@ -34,7 +34,7 @@ public class LogSerialStrategy extends SerialStrategy {
 	}
 
 	@Override
-	public void serialize(OutputStream os, Serializable obj) {
+	public void serialize(OutputStream os, Storable obj) {
 		try {
 			String str = new GsonBuilder().setPrettyPrinting().create().toJson(obj);  
 			os.write(str.getBytes());

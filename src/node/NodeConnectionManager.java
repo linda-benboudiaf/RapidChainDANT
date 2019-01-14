@@ -2,8 +2,10 @@ package node;
 
 
 import java.io.IOException;
+import java.io.Serializable;
 
-import common.JsonSerialStrategy;
+import blockchain.Block;
+import common.PrettyJsonSerialStrategy;
 import tcp.Connection;
 import tcp.ConnectionManager;
 
@@ -21,36 +23,42 @@ public class NodeConnectionManager extends ConnectionManager {
 	 * @param client
 	 */
 	@Override
-	protected String response(String msg) throws IOException {
+	protected Serializable response(String msg) throws IOException {
+		NodeConnection c = (NodeConnection) this.client;
 		if (msg.equals("pull")) {
-			client.send("what");
-			msg = client.receive();
+			c.send("what");
+			msg = (String) c.receive();
 			switch (msg) {
 				case "peers":
-					return new JsonSerialStrategy().serialize(App.peers);
+					return App.peers;
 				case "pocket":
-					return new JsonSerialStrategy().serialize(App.pocket);
+					return App.pocket;
 				default:
 					return super.response(msg);
 			}
 		} else if (msg.equals("push")) {
-			client.send("what");
-			msg = client.receive();
+			c.send("what");
+			msg = (String) c.receive();
 			switch (msg) {
 			case "peers":
+				c.send("ok");
+				PeerTable peers = (PeerTable) c.receive();
+				App.peers.merge(peers);
 				return "ok";
 			case "pocket":
+				return "nope";
+			case "block":
+				c.send("ok");
+				Block block = (Block) c.receive();
+				App.store.register(block, block.file(), new PrettyJsonSerialStrategy());
+				App.store.save(block.file());
 				return "ok";
 			default:
 				return super.response(msg);
-		}
+			}
 		} else {
 			return super.response(msg);
 		}
 	}
 
-	@Override
-	protected String prompt() {
-		return null;
-	}
 }

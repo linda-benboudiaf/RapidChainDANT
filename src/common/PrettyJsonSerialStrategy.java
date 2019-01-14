@@ -4,14 +4,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 
 import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonWriter;
 
 public class PrettyJsonSerialStrategy extends SerialStrategy {
 
 	@Override
-	public String serialize(Serializable obj) {
+	public String serialize(Storable obj) {
 		return new GsonBuilder()
 			.enableComplexMapKeySerialization()
 			.setPrettyPrinting()
@@ -20,7 +22,7 @@ public class PrettyJsonSerialStrategy extends SerialStrategy {
 	}
 
 	@Override
-	public Serializable unserialize(InputStream str, Serializable target) {
+	public Storable unserialize(InputStream str, Storable target) {
 		Reader r = new InputStreamReader(str);
 		return new GsonBuilder()
 			.enableComplexMapKeySerialization()
@@ -35,7 +37,7 @@ public class PrettyJsonSerialStrategy extends SerialStrategy {
 	}
 
 	@Override
-	public Serializable unserialize(String str, Serializable target) {
+	public Storable unserialize(String str, Storable target) {
 		return new GsonBuilder()
 				.enableComplexMapKeySerialization()
 				.setPrettyPrinting()
@@ -44,12 +46,12 @@ public class PrettyJsonSerialStrategy extends SerialStrategy {
 	}
 
 	@Override
-	public void serialize(OutputStream os, Serializable obj) {
+	public void serialize(OutputStream os, Storable obj) {
 		// TODO Auto-generated method stub
 		try {
-			String str = new GsonBuilder().setPrettyPrinting().create().toJson(obj);  
-			os.write(str.getBytes());
-			os.close();			
+			OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");
+			JsonWriter jw = new JsonWriter(osw);
+			new GsonBuilder().setPrettyPrinting().create().toJson(obj, obj.getClass(), jw);  
 		}catch(IOException e) {
 			Log.error(e);
 		}

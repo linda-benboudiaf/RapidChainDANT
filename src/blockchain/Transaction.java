@@ -1,9 +1,6 @@
 package blockchain;
 
 import java.security.*;
-import java.util.ArrayList;
-
-import node.App;
 
 public class Transaction {
 
@@ -21,7 +18,7 @@ public class Transaction {
 	}
 
 	// This Calculates the transaction hash (which will be used as its Id)
-	private String calulateHash() {
+	public String calulateHash() {
 		sequence++; // increase the sequence to avoid 2 identical transactions having the same hash
 		return StringUtil.applySha256(StringUtil.getStringFromKey(sender) + value + sequence);
 	}

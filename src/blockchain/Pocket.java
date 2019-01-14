@@ -1,17 +1,18 @@
 package blockchain;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.*;
 import com.google.gson.*;
 
 import common.Log;
 import common.PrettyJsonSerialStrategy;
-import common.Requestable;
-import common.Serializable;
 import common.Storable;
 import node.App;
+import node.Node;
 
-public class Pocket implements Storable, Requestable {
+@SuppressWarnings("serial")
+public class Pocket implements java.io.Serializable, Storable {
 	public ArrayList<Block> heads = new ArrayList<Block>();
 	public static int level = 5;
 	
@@ -30,7 +31,7 @@ public class Pocket implements Storable, Requestable {
 	 * 
 	 * @return
 	 */
-	public String lastHash() {
+	public String highestHash() {
 		return highestHead().hash;
 	}
 	
@@ -68,9 +69,9 @@ public class Pocket implements Storable, Requestable {
 
 	public void tests() {
 
-		addBlock(new Block(new Sentance("Im the second 2"), lastHash()));
+		addBlock(new Block(new Sentance("Im the second 2"), highestHash()));
 
-		addBlock(new Block(new Sentance("Im the third 3"), lastHash()));
+		addBlock(new Block(new Sentance("Im the third 3"), highestHash()));
 
 		// On verifie après le minage que la chaine est toujours valide.
 		Log.debug("Is the chaine always valid " + isChainValid());
@@ -150,7 +151,7 @@ public class Pocket implements Storable, Requestable {
 	}
 
 	/**
-	 * Fonction récursive vérifiant la totalité d'une chaine en partant de sa head
+	 * Fonction vérifiant la totalité d'une chaine en partant de sa head
 	 * 
 	 * @param current
 	 * @return
@@ -179,6 +180,46 @@ public class Pocket implements Storable, Requestable {
 			} 
 		}
 		return true;
+	}
+
+	/**
+	 * Envoie l'ensemble des chaines
+	 * 
+	 * @return
+	 */
+	public void sendAllBlocks(Node node) {
+		for (Block head : heads) {
+			sendAllBlocks(head, node);
+		}
+	}
+
+	/**
+	 * Fonction envoyant la totalité d'une chaine en partant de sa head
+	 * 
+	 * @param current
+	 * @return
+	 */
+	public void sendAllBlocks(Block head, Node node) {
+		Stack<Block> stack = new Stack<Block>();
+		Block previous;
+		// use explicit stack call instead of recursivity to save memory
+		node.send(head);
+		stack.push(head);
+		while(!stack.empty()) {
+			head = stack.pop();
+			// try to get previous block from store
+			try {
+				previous = Block.get(head.previousHash);
+				node.send(previous);
+			} catch (IOException e) {
+				Log.error(e);
+				break;
+			}
+			// if not genesis block, check if previous blocks are valid
+			if (!isGenesisBlock(previous)) {
+				stack.push(previous);
+			} 
+		}
 	}
 
 	private boolean isGenesisBlock(Block block) {

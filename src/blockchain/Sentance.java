@@ -1,5 +1,9 @@
 package blockchain;
-public class Sentance {
+
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class Sentance implements Serializable{
 
 	public String transactionId; // this is also the hash of the transaction.
 	public String value;

@@ -1,8 +1,10 @@
 package tcp;
 
+import java.io.Serializable;
 import java.net.InetSocketAddress;
 
-public class Address {
+@SuppressWarnings("serial")
+public class Address implements Serializable {
 	protected String host;
 	protected int port;
 

@@ -2,16 +2,17 @@
 package blockchain;
 
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 import java.util.Date;
 
 import node.App;
 import common.JsonSerialStrategy;
 import common.Log;
-import common.Serializable;
 import common.Storable;
 
 
-public class Block implements Storable{
+@SuppressWarnings("serial")
+public class Block implements Serializable, Storable{
 
 	protected String hash;
 	protected String previousHash;
@@ -38,6 +39,21 @@ public class Block implements Storable{
 	 */
 	private Block(String hash) {
 		this.hash = hash;
+	}
+	
+	public Block() {
+	}
+
+	public String getHash() {
+		return hash;
+	}
+
+	public String getPreviousHash() {
+		return previousHash;
+	}
+
+	public Sentance getData() {
+		return data;
 	}
 
 	/**
@@ -99,5 +115,9 @@ public class Block implements Storable{
 		nonce = bloc.nonce;
 	}
 
+	@Override
+	public String command() {
+		return "block";
+	}
 
 }

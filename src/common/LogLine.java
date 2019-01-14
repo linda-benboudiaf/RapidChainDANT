@@ -1,7 +1,9 @@
 package common;
 
+import java.io.Serializable;
 import java.util.Date;
 
+@SuppressWarnings("serial")
 public class LogLine implements Storable {
 	protected String str;
 
@@ -25,4 +27,8 @@ public class LogLine implements Storable {
 		return new Date().toString() + " " + str + "\n";
 	}
 
+	@Override
+	public String command() {
+		return "logline";
+	}
 }

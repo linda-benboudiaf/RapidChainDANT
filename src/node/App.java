@@ -1,6 +1,8 @@
 package node;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import blockchain.Block;
 import blockchain.Pocket;
 import blockchain.Sentance;
 import common.Debuggable;
@@ -64,6 +66,13 @@ public class App extends Debuggable implements Runnable {
 			store.load("pocket");
 			
 			new Thread(new PeriodicPulls(30)).start();
+			new Thread(new NodeClient()).start();
+			
+			
+			for (Sentance sentance : phrases) {
+				Block block = new Block(sentance, pocket.highestHash());
+				peers.sendAll(block);
+			}
 			
 			if (runtests) {
 				runTests();
@@ -79,7 +88,6 @@ public class App extends Debuggable implements Runnable {
 
 		// tests
 		try {
-			 new Thread(new NodeClient()).start();
 			//tests routetable
 //			routeTable.add(new Node("128.78.51.131", 3032));
 			peers.add(new Node("localhost", 3023));

@@ -1,15 +1,12 @@
 package node;
-import java.io.IOException;
 import java.net.Socket;
 
-import common.JsonSerialStrategy;
-import common.Requestable;
 import common.SerialStrategy;
-import common.Serializable;
+import common.StdJavaSerialStrategy;
 import tcp.Connection;
 
 public class NodeConnection extends Connection {
-	protected SerialStrategy serialStrategy = new JsonSerialStrategy();
+	protected SerialStrategy serialStrategy = new StdJavaSerialStrategy();
 
 	public NodeConnection(String prefix) {
 		super(prefix);
@@ -24,14 +21,6 @@ public class NodeConnection extends Connection {
 	public NodeConnection(Socket sock) {
 		super(sock);
 		// TODO Auto-generated constructor stub
-	}
-	
-	public void send(Serializable obj) {
-		super.send(serialStrategy.serialize(obj));
-	}
-	
-	public Requestable receive(Requestable target) throws IOException{
-		return (Requestable) serialStrategy.unserialize(receive(), target);
 	}
 
 }

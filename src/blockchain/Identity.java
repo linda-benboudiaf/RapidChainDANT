@@ -1,10 +1,11 @@
 package blockchain;
 
+import java.io.Serializable;
 import java.security.*;
 import java.security.spec.ECGenParameterSpec;
-import common.Serializable;
 import common.Storable;
 
+@SuppressWarnings("serial")
 public class Identity implements Storable {
 	public PrivateKey privateKey;
 	public PublicKey publicKey;
@@ -44,6 +45,12 @@ public class Identity implements Storable {
 		Identity i = (Identity) obj;
 		privateKey = i.privateKey;
 		publicKey = i.publicKey;
+		
+	}
+
+	@Override
+	public String command() {
+		return "id";
 	}
 
 	public static void main(String[] args) {

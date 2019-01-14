@@ -1,13 +1,10 @@
 package blockchain;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.io.Writer;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -16,16 +13,15 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
 import com.google.gson.GsonBuilder;
-import com.google.gson.*;
 
 import common.Log;
 import common.SerialStrategy;
-import common.Serializable;
+import common.Storable;
 
 public class IdentitySerialStrategy extends SerialStrategy {
 
 	@Override
-	public String serialize(Serializable obj) {
+	public String serialize(Storable obj) {
 		Identity id = (Identity) obj;
 		PrivateKey privateKey = id.privateKey;
 		PublicKey publicKey = id.publicKey;
@@ -45,7 +41,7 @@ public class IdentitySerialStrategy extends SerialStrategy {
 	}
 
 	@Override
-	public Serializable unserialize(InputStream str, Serializable target) {
+	public Storable unserialize(InputStream str, Storable target) {
 	
 		// Generate KeyPair.
 		KeyFactory keyFactory;
@@ -82,7 +78,7 @@ public class IdentitySerialStrategy extends SerialStrategy {
 	}
 	
 	@Override
-	public void serialize(OutputStream os, Serializable obj) {
+	public void serialize(OutputStream os, Storable obj) {
 		try {
 			String str = new GsonBuilder().setPrettyPrinting().create().toJson(obj);  
 			os.write(str.getBytes());
@@ -97,7 +93,7 @@ public class IdentitySerialStrategy extends SerialStrategy {
 	}
 
 	@Override
-	public Serializable unserialize(String str, Serializable target) {
+	public Storable unserialize(String str, Storable target) {
 		return new GsonBuilder()
 				.enableComplexMapKeySerialization()
 				.create()

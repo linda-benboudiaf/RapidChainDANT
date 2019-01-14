@@ -4,13 +4,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public abstract class SerialStrategy {
-	public abstract String serialize(Serializable obj);
+	public abstract String serialize(Storable obj);
 	
-	public abstract void serialize(OutputStream os, Serializable obj);
+	public abstract void serialize(OutputStream os, Storable obj);
 	
-	public abstract Serializable unserialize(InputStream str, Serializable target);
+	public abstract Storable unserialize(InputStream str, Storable target);
 
-	public abstract Serializable unserialize(String str, Serializable target);
+	public abstract Storable unserialize(String str, Storable target);
 	
 	public abstract String ext();
 	

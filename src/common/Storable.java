@@ -1,5 +1,10 @@
 package common;
 
-public interface Storable extends Serializable{
+import java.io.Serializable;
 
+public interface Storable extends Serializable {
+	
+	void overwrite(Serializable obj);
+	boolean isEmpty();
+	String command();
 }

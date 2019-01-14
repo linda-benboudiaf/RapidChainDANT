@@ -1,6 +1,5 @@
 package tcp;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Scanner;
@@ -36,11 +35,7 @@ public class Client extends Connection implements Runnable {
 			this.setFromSocket(c);
 			new Thread(() -> {
 				while (true) {
-					try {
-						System.out.println(this.receive());
-					} catch (IOException e) {
-						this.error(e);
-					}
+					System.out.println(this.receive());
 				}
 			}).start();
 			String msg = "";

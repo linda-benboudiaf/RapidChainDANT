@@ -18,7 +18,7 @@ public class PeriodicPulls implements Runnable {
 		while(true) {
 			PeerTable newPeers = (PeerTable) App.peers.requestAll(new PeerTable());
 			Log.debug(newPeers, "periodic pull");
-			App.peers.putAll(newPeers);
+			App.peers.merge(newPeers);
 			try {
 				App.store.save("peers");
 				Thread.sleep(timeout * 1000); // toutes les 15 secondes

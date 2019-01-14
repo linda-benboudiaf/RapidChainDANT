@@ -1,6 +1,7 @@
 package tcp;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.concurrent.Callable;
 
 import common.Debuggable;
@@ -37,7 +38,8 @@ public class ConnectionManager extends Debuggable implements Callable<String> {
 			
 			// running server loop
 			while (true) {
-				msg = client.receive().toLowerCase();
+				msg = (String) client.receive();
+				msg.toLowerCase();
 				if (Protocol.exit.equals(msg)) {
 					this.info("client disconnected");
 					break;
@@ -52,7 +54,7 @@ public class ConnectionManager extends Debuggable implements Callable<String> {
 
 	}
 
-	protected String response(String msg) throws IOException {
+	protected Serializable response(String msg) throws IOException {
 		switch (msg) {
 			case "yo":
 				return "yo man";
@@ -61,16 +63,8 @@ public class ConnectionManager extends Debuggable implements Callable<String> {
 		}
 	}
 
-	protected void answer(String msg) {
-		String prompt = this.prompt();
-		if (prompt != null) {
-			msg += "\n" + prompt;
-		}
+	protected void answer(Serializable msg) {
 		client.send(msg);
-	}
-
-	protected String prompt() {
-		return "$>";
 	}
 	
 	protected String onSuccess(String msg) {
