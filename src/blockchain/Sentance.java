@@ -9,7 +9,6 @@ public class Sentance {
 	public String value;
 	public byte[] signature; // this is to prevent anybody else from spending funds in our wallet.
 
-	private static int sequence = 0; // a rough count of how many transactions have been generated.
 
 	// Constructor:
 	public Sentance(PublicKey from, String value) {
@@ -19,8 +18,7 @@ public class Sentance {
 
 	// This Calculates the transaction hash (which will be used as its Id)
 	public String calculateHash() {
-		sequence++; // increase the sequence to avoid 2 identical transactions having the same hash
-		return StringUtil.applySha256(StringUtil.getStringFromKey(sender) + value + sequence);
+		return StringUtil.applySha256(StringUtil.getStringFromKey(sender) + value);
 	}
 
 	// Signs all the data we dont wish to be tampered with.
