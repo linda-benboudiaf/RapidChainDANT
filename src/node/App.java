@@ -36,7 +36,7 @@ public class App extends Debuggable implements Runnable {
 	
 	public App(int port, boolean runtests) {
 		this(port);
-		Log.setLevel(2);
+		Log.setLevel(2); // log level debug
 		this.runtests = runtests;
 	}
 
