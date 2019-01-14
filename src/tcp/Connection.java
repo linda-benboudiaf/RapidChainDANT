@@ -6,6 +6,7 @@ import java.net.Socket;
 import common.IOTransmitter;
 
 public class Connection extends IOTransmitter {
+	protected Address addr;
 
 	public Connection(String prefix) {
 		super(prefix);
@@ -20,6 +21,10 @@ public class Connection extends IOTransmitter {
 		this(sock, "");
 	}
 
+	public Address getAddr() {
+		return addr;
+	}
+
 	/**
 	 * Set the input and output streams from a TCP socket
 	 * @param sock
@@ -28,6 +33,7 @@ public class Connection extends IOTransmitter {
 		try {
 			this.is = sock.getInputStream();
 			this.os = sock.getOutputStream();
+			this.addr = new Address(sock.getLocalAddress().getHostAddress(), sock.getLocalPort());
 		} catch (IOException e) {
 //			e.printStackTrace();
 			this.error(e);

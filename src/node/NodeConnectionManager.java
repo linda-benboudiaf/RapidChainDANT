@@ -12,6 +12,7 @@ public class NodeConnectionManager extends ConnectionManager {
 	public NodeConnectionManager(Connection client, String id, String prefix) {
 		super(client, id, prefix);
 		this.motd = null;
+		App.peers.addAddr(client.getAddr());
 	}
 
 	/**

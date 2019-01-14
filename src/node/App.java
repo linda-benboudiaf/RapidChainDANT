@@ -7,16 +7,17 @@ import common.Debuggable;
 import common.Log;
 import common.PrettyJsonSerialStrategy;
 import common.Store;
+import tcp.Address;
 
 public class App extends Debuggable implements Runnable {
 	public static volatile Store store = new Store("data");
 	protected boolean runtests = false;
 	protected Address addr;
 	protected static final int defaultPort = 3023;
-	protected static PeerTable peers;
 	protected static Identity id; 
-	protected static Pocket pocket;
-	protected static NodeServer server;
+	protected static volatile PeerTable peers;
+	protected static volatile Pocket pocket;
+	protected static volatile NodeServer server;
 	
 	public App() {
 		this (defaultPort);

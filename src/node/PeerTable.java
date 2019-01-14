@@ -8,6 +8,7 @@ import common.Log;
 import common.Requestable;
 import common.Serializable;
 import common.Storable;
+import tcp.Address;
 
 @SuppressWarnings("serial")
 public class PeerTable extends HashMap<Address, Node> implements Storable, Requestable {
@@ -16,6 +17,18 @@ public class PeerTable extends HashMap<Address, Node> implements Storable, Reque
 	public void add(Node node) {
 		this.put(node.getAddr(), node);
 	}
+
+	
+	/**
+	 * Ajoute l'adresse si elle n'exite pas déjà à la table de routage
+	 * @param ip
+	 */
+	public void addAddr(Address addr) {
+		if (!this.containsKey(addr)) {
+			Node node = new Node(addr);
+			this.put(addr, node);
+		}
+	}
 	
 	/**
 	 * Ajoute l'ip si elle n'exite pas déjà à la table de routage
@@ -23,15 +36,13 @@ public class PeerTable extends HashMap<Address, Node> implements Storable, Reque
 	 */
 	public void addIp(String ip) {
 		Address addr = new Address(ip, App.defaultPort);
-		if (!this.containsKey(addr)) {
-			Node node = new Node(addr);
-			this.put(addr, node);
-		}
+		addAddr(addr);
 	}
 	
 	public Requestable requestAll(Requestable obj) {
 		int fails;
-		for (Node node : this.values()) {
+		PeerTable nodes = (PeerTable) this.clone();
+		for (Node node : nodes.values()) {
 			fails = node.nbFailsThisWeek();
 			if (fails < tolerance) {
 				Requestable res = node.request(obj);
