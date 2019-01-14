@@ -11,11 +11,11 @@ public class NodeClient implements Runnable {
 	public void run() {
 		try (Scanner sc = new Scanner(System.in)) {
 
-			phrase = sc.next();
+			while((phrase = sc.next()) != null) {
 			Sentance s = new Sentance(phrase); // ajout de la phrase a la DATA du block
 			App.phrases.add(s);
-			System.out.println(App.phrases.toString()); // affichage de test
-
+			System.out.println("Data added : "+App.phrases.toString()); // affichage de test
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

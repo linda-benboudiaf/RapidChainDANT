@@ -31,10 +31,10 @@ public class Pocket implements Storable, Requestable {
 	 * @return
 	 */
 	public String lastHash() {
-		return hiestHead().hash;
+		return highestHead().hash;
 	}
 	
-	public Block hiestHead() {
+	public Block highestHead() {
 		for (Block head : heads) {
 			return head;
 		}
@@ -79,10 +79,10 @@ public class Pocket implements Storable, Requestable {
 		 * On crée une instance GsonBuilder avec la méthode create(),
 		 * SetPrettyPrinting() veut dire que le Output est un JSON.
 		 */
-		String BCJson = new GsonBuilder().setPrettyPrinting().create().toJson(getFullChain(hiestHead()));
+		String BCJson = new GsonBuilder().setPrettyPrinting().create().toJson(getFullChain(highestHead()));
 		System.out.println("BlockChain list:");
 		System.out.println(BCJson);
-		Log.debug("blockchain length: " + getFullChainHashes(hiestHead()).size());
+		Log.debug("blockchain length: " + getFullChainHashes(highestHead()).size());
 
 	}
 
