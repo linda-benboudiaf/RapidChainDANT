@@ -1,6 +1,10 @@
 package common;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+
+import com.google.gson.GsonBuilder;
 
 public class LogSerialStrategy extends SerialStrategy {
 
@@ -27,6 +31,17 @@ public class LogSerialStrategy extends SerialStrategy {
 	@Override
 	public boolean writeMode() {
 		return true;
+	}
+
+	@Override
+	public void serialize(OutputStream os, Serializable obj) {
+		try {
+			String str = new GsonBuilder().setPrettyPrinting().create().toJson(obj);  
+			os.write(str.getBytes());
+			os.close();			
+		}catch(IOException e) {
+			Log.error(e);
+		}
 	}
 
 

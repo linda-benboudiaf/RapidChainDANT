@@ -2,6 +2,8 @@ package blockchain;
 
 import java.security.*;
 
+import node.App;
+
 public class Sentance {
 
 	public String transactionId; // this is also the hash of the transaction.
@@ -14,6 +16,10 @@ public class Sentance {
 	public Sentance(PublicKey from, String value) {
 		this.sender = from;
 		this.value = value;
+	}
+	
+	public Sentance(String value) {
+		this(App.getId().publicKey, value);
 	}
 
 	// This Calculates the transaction hash (which will be used as its Id)

@@ -1,7 +1,9 @@
 package common;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.Reader;
 
 import com.google.gson.GsonBuilder;
@@ -41,5 +43,16 @@ public class PrettyJsonSerialStrategy extends SerialStrategy {
 				.fromJson(str, target.getClass());
 	}
 
-
+	@Override
+	public void serialize(OutputStream os, Serializable obj) {
+		// TODO Auto-generated method stub
+		try {
+			String str = new GsonBuilder().setPrettyPrinting().create().toJson(obj);  
+			os.write(str.getBytes());
+			os.close();			
+		}catch(IOException e) {
+			Log.error(e);
+		}
+ 
+	}
 }
