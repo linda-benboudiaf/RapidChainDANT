@@ -11,9 +11,7 @@ import common.Log;
 import common.Serializable;
 import common.Storable;
 
-/**
- * Class Block {@DATA: date, number}, {@PreviousHash}, {@HashOfCurrentBlock},
- */
+
 public class Block implements Storable{
 
 	protected String hash;
@@ -21,8 +19,6 @@ public class Block implements Storable{
 	protected Sentance data;
 	protected long timeStamp;
 	protected int nonce;
-	protected Node validator; // on garde une trace du validateur = node qui a validé le block
-	protected int reputation; 
 	
 	/**
 	 * Constructor for new blocks
@@ -33,7 +29,6 @@ public class Block implements Storable{
 		this.data = data;
 		this.previousHash = previousHash;
 		this.timeStamp = new Date().getTime();
-		this.reputation=0;
 		this.hash = calculateHash(); // sera appliquer une fois les autres valuers sont initialsé.
 		mineBlock(Pocket.level);
 	}
@@ -69,7 +64,7 @@ public class Block implements Storable{
 			previousHash +
 			Long.toString(timeStamp) +
 			Integer.toString(nonce) +
-			data
+			data.calculateHash() // calculateHash de la classe sentance
 		);
 		return calculatedhash;
 	}
@@ -103,7 +98,6 @@ public class Block implements Storable{
 		data = bloc.data;
 		timeStamp = bloc.timeStamp;
 		nonce = bloc.nonce;
-		validator = bloc.validator;
 	}
 
 
