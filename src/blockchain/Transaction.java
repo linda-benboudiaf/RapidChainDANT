@@ -4,7 +4,11 @@ import java.security.*;
 import java.util.ArrayList;
 
 import node.App;
-
+/**
+ * 
+ * @author kurzed
+ * Classe pas encore utilisée, on la garde pour evolution
+ */
 public class Transaction {
 
 	public String transactionId; // this is also the hash of the transaction.

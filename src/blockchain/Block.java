@@ -18,17 +18,18 @@ public class Block implements Storable{
 	protected Sentance data;
 	protected long timeStamp;
 	protected int nonce;
+	protected String merkleRoot;
 	
 	/**
-	 * Constructor for new blocks
-	 * @param data
-	 * @param previousHash
+	 * Constructeur des nouveaux blocs
+	 * @param data la phrase a ajouter
+	 * @param previousHash le hash du bloc precedent
 	 */
 	public Block(Sentance data,String previousHash ) {
 		this.data = data;
 		this.previousHash = previousHash;
 		this.timeStamp = new Date().getTime();
-		this.hash = calculateHash(); // sera appliquer une fois les autres valuers sont initialsé.
+		this.hash = calculateHash(); // sera appliqué une fois que les autres valeurs sont initialisées.
 		mineBlock(Pocket.level);
 	}
 
@@ -55,7 +56,7 @@ public class Block implements Storable{
 		return "blocks/" + hash;
 	}
 
-	// Calculate new hash based on blocks contents
+	// Calcule le hash en utilisant les données
 	// On applique le Hash sur toutes la données qu'on veut protéger: Date,
 	// HashPrécédent, Data
 	public String calculateHash() {
@@ -63,7 +64,7 @@ public class Block implements Storable{
 			previousHash +
 			Long.toString(timeStamp) +
 			Integer.toString(nonce) +
-			data.calculateHash() // calculateHash de la classe sentance
+			merkleRoot
 		);
 		return calculatedhash;
 	}
@@ -72,10 +73,11 @@ public class Block implements Storable{
 	public void mineBlock(int difficulty) {
 		Log.debug("Mining Block: " + data);
 		String target = Hash.getDificultyString(difficulty); //Create a string with difficulty * "0" 
+		merkleRoot=data.calculateHash();
 		while(!hash.substring( 0, difficulty).equals(target)) {
 			nonce ++;
 			hash = calculateHash();
-		}
+			}
 		Log.debug("Block Mined!!! : " + hash);
 	}
 
@@ -97,6 +99,7 @@ public class Block implements Storable{
 		data = bloc.data;
 		timeStamp = bloc.timeStamp;
 		nonce = bloc.nonce;
+		merkleRoot=bloc.merkleRoot;
 	}
 
 
