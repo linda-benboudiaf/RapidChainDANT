@@ -27,12 +27,14 @@ public class IdentitySerialStrategy extends SerialStrategy {
 		// Store Public Key.
 		X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(
 				publicKey.getEncoded());
-		String pub  = x509EncodedKeySpec.getEncoded().toString();
+		String pub  = new String(x509EncodedKeySpec.getEncoded());
  
 		// Store Private Key.
 		PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(
 				privateKey.getEncoded());
-		String priv = pkcs8EncodedKeySpec.getEncoded().toString();
+		String priv = new String(pkcs8EncodedKeySpec.getEncoded());
+		Log.debug(priv);
+		Log.debug(pub);
 		return priv + "%" + pub;
 	}
 
@@ -58,7 +60,7 @@ public class IdentitySerialStrategy extends SerialStrategy {
 			String privKey = pieces[0];
 			encodedPrivateKey = privKey.getBytes();
 			encodedPublicKey = pubKey.getBytes();
-			keyFactory = KeyFactory.getInstance("BC");
+			keyFactory = KeyFactory.getInstance("ECDSA", "BC");
 			X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(
 					encodedPublicKey);
 			PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
