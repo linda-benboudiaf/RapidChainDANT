@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.util.Date;
 
 import node.App;
-import node.Node;
 import common.JsonSerialStrategy;
 import common.Log;
 import common.Serializable;

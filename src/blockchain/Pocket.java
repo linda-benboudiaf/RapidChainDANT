@@ -38,7 +38,7 @@ public class Pocket implements Storable, Requestable {
 		for (Block head : heads) {
 			return head;
 		}
-		Block genesis = new Block("Im the first 1 Im the Genesis Block", "0");
+		Block genesis = new Block(new Sentance("Im the first 1 Im the Genesis Block"), "0");
 		addBlock(genesis);
 		return genesis;
 	}
@@ -68,9 +68,9 @@ public class Pocket implements Storable, Requestable {
 
 	public void tests() {
 
-		addBlock(new Block("Im the second 2", lastHash()));
+		addBlock(new Block(new Sentance("Im the second 2"), lastHash()));
 
-		addBlock(new Block("Im the third 3", lastHash()));
+		addBlock(new Block(new Sentance("Im the third 3"), lastHash()));
 
 		// On verifie après le minage que la chaine est toujours valide.
 		Log.debug("Is the chaine always valid " + isChainValid());

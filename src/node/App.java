@@ -2,7 +2,6 @@ package node;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import blockchain.Identity;
 import blockchain.Pocket;
 import blockchain.Sentance;
 import common.Debuggable;
@@ -16,7 +15,6 @@ public class App extends Debuggable implements Runnable {
 	protected boolean runtests = false;
 	protected Address addr;
 	protected static final int defaultPort = 3023;
-	protected static Identity id; 
 	protected static volatile PeerTable peers;
 	protected static volatile Pocket pocket;
 	protected static volatile NodeServer server;
@@ -41,6 +39,18 @@ public class App extends Debuggable implements Runnable {
 		this.runtests = runtests;
 	}
 
+	public static PeerTable getPeers() {
+		return peers;
+	}
+
+	public static Pocket getPocket() {
+		return pocket;
+	}
+
+	public static ArrayList<Sentance> getPhrases() {
+		return phrases;
+	}
+
 	@Override
 	public void run() {
 		new Thread(new NodeServer(addr, 20)).start();
@@ -50,14 +60,6 @@ public class App extends Debuggable implements Runnable {
 			peers.initFromDns();
 			store.register(peers, "peers", new PrettyJsonSerialStrategy());
 			store.load("peers");
-
-			id = new Identity(); 
-			store.register(id, "identity", new PrettyJsonSerialStrategy());
-			store.load("identity");
-			if(id.isEmpty()) {
-				id.generateKeyPair();
-				store.save("identity");
-			}
 			
 			pocket = new Pocket(4);
 			store.register(pocket, "pocket", new PrettyJsonSerialStrategy());

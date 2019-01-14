@@ -12,8 +12,8 @@ public class NodeClient implements Runnable {
 		new Thread(() -> {
 			try (Scanner sc = new Scanner(System.in)) {
 
-				while((phrase = sc.next()) != null);{
-				Sentance s = new Sentance(App.id.publicKey, phrase); // ajout de la phrase a la DATA du block
+				phrase = sc.next();
+				Sentance s = new Sentance(phrase); // ajout de la phrase a la DATA du block
 				App.phrases.add(s);
 				System.out.println(App.phrases.toString()); // affichage de test
 				}
