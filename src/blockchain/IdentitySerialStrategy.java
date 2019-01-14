@@ -3,17 +3,22 @@ package blockchain;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
 import com.google.gson.GsonBuilder;
+import java.io.File;
+import java.io.FileInputStream;
 
 import common.SerialStrategy;
 import common.Serializable;
 
 public class IdentitySerialStrategy extends SerialStrategy {
+
+	private String path;
 
 	@Override
 	public String serialize(Serializable obj) {
@@ -58,7 +63,7 @@ public class IdentitySerialStrategy extends SerialStrategy {
 				encodedPrivateKey);
 		PrivateKey privateKey = keyFactory.generatePrivate(privateKeySpec);
 	}
-
+	
 	@Override
 	public String ext() {
 		return "json";
