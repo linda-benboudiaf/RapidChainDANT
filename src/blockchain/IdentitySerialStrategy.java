@@ -1,8 +1,13 @@
 package blockchain;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.Writer;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -11,6 +16,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
 import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 
 import common.Log;
 import common.SerialStrategy;
@@ -76,6 +82,16 @@ public class IdentitySerialStrategy extends SerialStrategy {
 	}
 	
 	@Override
+	public void serialize(OutputStream os, Serializable obj) {
+		try {
+			String str = new GsonBuilder().setPrettyPrinting().create().toJson(obj);  
+			os.write(str.getBytes());
+			os.close();			
+		}catch(IOException e) {
+			Log.error(e);
+		}
+	}
+	@Override
 	public String ext() {
 		return "json";
 	}
@@ -87,6 +103,5 @@ public class IdentitySerialStrategy extends SerialStrategy {
 				.create()
 				.fromJson(str, target.getClass());
 	}
-
 
 }
