@@ -1,8 +1,10 @@
 package node;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import blockchain.Identity;
 import blockchain.Pocket;
+import blockchain.Sentance;
 import common.Debuggable;
 import common.Log;
 import common.PrettyJsonSerialStrategy;
@@ -18,6 +20,7 @@ public class App extends Debuggable implements Runnable {
 	protected static volatile PeerTable peers;
 	protected static volatile Pocket pocket;
 	protected static volatile NodeServer server;
+	protected static volatile ArrayList<Sentance> phrases;
 	
 	public App() {
 		this (defaultPort);
