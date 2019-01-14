@@ -1,0 +1,47 @@
+body {
+    margin: 0;
+}
+h1{
+    text-align: center; 
+}
+ul {
+  
+    padding:0;
+    background-color: rgb(0, 176, 189); 
+    position: fixed;
+    height: 100%; 
+}
+
+li a {
+    display: block;
+    color:  rgb(90, 45, 2);
+    padding: 8px 16px;
+    text-decoration: none; /*pour enlever le souligneur Bleu*/
+}
+
+li a:hover:not(.active) {
+    background-color: rgb(30, 215, 228); 
+    color: white;
+}
+p {
+    line-height: 2em;
+  }
+.contenue {
+    margin-left: 200px;
+    margin-right: 100px;
+}
+
+button:hover :not(.active) {
+    background-color: rgb(0, 176, 189); 
+    color: white;
+}
+iframe {
+    width: 100%; 
+}
+footer{
+    padding: 10px;
+    text-align: center;
+    display: block;
+    width: 100%;
+    
+}

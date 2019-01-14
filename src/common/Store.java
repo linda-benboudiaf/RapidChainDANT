@@ -2,6 +2,7 @@ package common;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,10 +23,10 @@ public class Store {
 
 	public void register(Storable object, String file, SerialStrategy strat) throws IOException {
 		stores.put(file, new StoreData (object, strat));
-		checkFile(file);
+		createFileIfNotExist(file);
 	}
 
-	protected void checkFile(String file) throws IOException {
+	protected void createFileIfNotExist(String file) throws IOException {
 		File fileObject = new File(name2path(file));
 		if (!fileObject.exists()) {
 			File dirObject = fileObject.getParentFile();
@@ -53,7 +54,7 @@ public class Store {
 		}
 	}
 
-	public void load(String name) throws IOException {
+	public void load(String name) {
 		StoreData pair = stores.get(name);
 		Storable target = pair.getData();
 		SerialStrategy strat = pair.getStrat();
@@ -62,6 +63,8 @@ public class Store {
 			if (obj != null && !obj.isEmpty()) {
 				target.overwrite(obj);
 			}
+		} catch (IOException e) {
+			Log.error(e);
 		}
 	}
 	
@@ -71,8 +74,24 @@ public class Store {
 		}
 	}
 	
+	public Storable get(Storable target, String file, SerialStrategy strat) throws FileNotFoundException {
+		try (InputStream fi = new FileInputStream(name2path(file, strat))) {
+			Storable obj = (Storable) strat.unserialize(fi, target);
+			if (obj != null && !obj.isEmpty()) {
+				target.overwrite(obj);
+			}
+		} catch (IOException e) {
+			Log.error(e);
+		}
+		return target;
+	}
+	
 	protected String name2path(String file) {
-		String ext = stores.get(file).getStrat().ext();
+		return name2path(file, stores.get(file).getStrat());
+	}
+	
+	protected String name2path(String file, SerialStrategy strat) {
+		String ext = strat.ext();
 		return  dir + "/" + file + "." + ext;
 	}
 }

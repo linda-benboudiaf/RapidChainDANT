@@ -1,5 +1,6 @@
 package node;
 
+import tcp.Address;
 import tcp.Server;
 
 /**
@@ -14,7 +15,7 @@ public class NodeServer extends Server {
 		this.factory = new NodeServerFactory();
 	}
 	
-	public NodeServer(Node node, int pool) {
-		this(node.getAddr().port, pool);
+	public NodeServer(Address addr, int pool) {
+		this(addr.getPort(), pool);
 	}
 }

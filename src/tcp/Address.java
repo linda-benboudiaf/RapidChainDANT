@@ -1,4 +1,4 @@
-package node;
+package tcp;
 
 import java.net.InetSocketAddress;
 
@@ -9,6 +9,14 @@ public class Address {
 	public Address(String host, int port) {
 		this.host = host;
 		this.port = port;
+	}
+	
+	public String getHost() {
+		return host;
+	}
+
+	public int getPort() {
+		return port;
 	}
 
 	public InetSocketAddress inet() {

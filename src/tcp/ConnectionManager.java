@@ -1,5 +1,6 @@
 package tcp;
 
+import java.io.IOException;
 import java.util.concurrent.Callable;
 
 import common.Debuggable;
@@ -51,7 +52,7 @@ public class ConnectionManager extends Debuggable implements Callable<String> {
 
 	}
 
-	protected String response(String msg) {
+	protected String response(String msg) throws IOException {
 		switch (msg) {
 			case "yo":
 				return "yo man";

@@ -1,6 +1,8 @@
-/bin/
+/bin/*
+!*.jar
 /data/*
 !README.md
 .metadata
 .DS_Store
 desktop.ini
+/bin/

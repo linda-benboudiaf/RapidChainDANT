@@ -1,32 +1,64 @@
 
 package blockchain;
 
+import java.io.FileNotFoundException;
 import java.util.Date;
-import node.Node;
 
+import node.App;
+import node.Node;
+import common.JsonSerialStrategy;
 import common.Log;
+import common.Serializable;
+import common.Storable;
 
 /**
  * Class Block {@DATA: date, number}, {@PreviousHash}, {@HashOfCurrentBlock},
  */
-public class Block {
+public class Block implements Storable{
 
-	public String hash;
-	public String previousHash;
-	private String data;
-	private long timeStamp;
-	private int nonce;
-	public Node validator; // on garde une trace du validateur = node qui a validé le block
-	public int reputation; 
+	protected String hash;
+	protected String previousHash;
+	protected Sentance data;
+	protected long timeStamp;
+	protected int nonce;
+	protected Node validator; // on garde une trace du validateur = node qui a validé le block
+	protected int reputation; 
 	
-
-	//Block Constructor.
-	public Block(String data,String previousHash ) {
+	/**
+	 * Constructor for new blocks
+	 * @param data
+	 * @param previousHash
+	 */
+	public Block(Sentance data,String previousHash ) {
 		this.data = data;
 		this.previousHash = previousHash;
 		this.timeStamp = new Date().getTime();
+		this.reputation=0;
 		this.hash = calculateHash(); // sera appliquer une fois les autres valuers sont initialsé.
-		this.reputation=0; 
+		mineBlock(Pocket.level);
+	}
+
+	/**
+	 * Constructor for already mined blocks
+	 * @param hash
+	 */
+	private Block(String hash) {
+		this.hash = hash;
+	}
+
+	/**
+	 * Get a block from the store
+	 * @param hash
+	 * @throws FileNotFoundException
+	 */
+	public static Block get(String hash) throws FileNotFoundException {
+		Block b = new Block(hash);
+		App.store.get(b, b.file(), new JsonSerialStrategy());
+		return b;
+	}
+	
+	public String file() {
+		return "blocks/" + hash;
 	}
 
 	// Calculate new hash based on blocks contents
@@ -44,6 +76,7 @@ public class Block {
 
 	// Increases no value until hash target is reached.
 	public void mineBlock(int difficulty) {
+		Log.debug("Mining Block: " + data);
 		String target = Hash.getDificultyString(difficulty); //Create a string with difficulty * "0" 
 		while(!hash.substring( 0, difficulty).equals(target)) {
 			nonce ++;
@@ -55,6 +88,22 @@ public class Block {
 	@Override
 	public String toString() {
 		return data.toString();
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return data.isEmpty() ;
+	}
+
+	@Override
+	public void overwrite(Serializable obj) {
+		Block bloc = (Block) obj;
+		hash = bloc.hash;
+		previousHash = bloc.previousHash;
+		data = bloc.data;
+		timeStamp = bloc.timeStamp;
+		nonce = bloc.nonce;
+		validator = bloc.validator;
 	}
 
 

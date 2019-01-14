@@ -3,12 +3,20 @@ package common;
 import java.io.IOException;
 
 public abstract class Log {
-	protected static int Level = 0;
+	protected static volatile int level = 0;
 	protected static String prefix = "LOG";
 	protected static Store store;
 	
+	public static int getLevel() {
+		return level;
+	}
+
+	public static void setLevel(int level) {
+		Log.level = level;
+	}
+
 	public static void start(Store store, int level) {
-		Log.Level = level;
+		Log.level = level;
 		Log.store = store;
 	}
 
@@ -26,7 +34,7 @@ public abstract class Log {
 	 * @param prefix
 	 */
 	public static void debug(Object msg, String prefix) {
-		if (Log.Level > 1) {
+		if (Log.level > 1) {
 			info(msg.toString(), prefix);
 		}
 	}
@@ -46,7 +54,7 @@ public abstract class Log {
 	 */
 	public static void info(String msg, String prefix) {
 		msg = "info: " + prefixString(prefix) + msg;
-		if (Log.Level > 0) {
+		if (Log.level > 0) {
 			System.out.println(msg);
 		}
 		append(msg);
@@ -86,7 +94,7 @@ public abstract class Log {
 	 */
 	public static void error(Exception e, String prefix) {
 		error(e.getMessage(), prefix);
-		if (Log.Level > 1) {
+		if (Log.level > 1) {
 			e.printStackTrace();
 		}
 	}
