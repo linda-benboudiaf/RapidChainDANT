@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import blockchain.Identity;
+import blockchain.IdentitySerialStrategy;
 import blockchain.Pocket;
 import blockchain.Sentance;
 import common.Debuggable;
@@ -41,6 +42,22 @@ public class App extends Debuggable implements Runnable {
 		this.runtests = runtests;
 	}
 
+	public static Identity getId() {
+		return id;
+	}
+
+	public static PeerTable getPeers() {
+		return peers;
+	}
+
+	public static Pocket getPocket() {
+		return pocket;
+	}
+
+	public static ArrayList<Sentance> getPhrases() {
+		return phrases;
+	}
+
 	@Override
 	public void run() {
 		new Thread(new NodeServer(addr, 20)).start();
@@ -52,7 +69,7 @@ public class App extends Debuggable implements Runnable {
 			store.load("peers");
 
 			id = new Identity(); 
-			store.register(id, "identity", new PrettyJsonSerialStrategy());
+			store.register(id, "identity", new IdentitySerialStrategy());
 			store.load("identity");
 			if(id.isEmpty()) {
 				id.generateKeyPair();
