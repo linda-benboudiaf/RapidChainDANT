@@ -63,6 +63,8 @@ public class App extends Debuggable implements Runnable {
 			store.register(pocket, "pocket", new PrettyJsonSerialStrategy());
 			store.load("pocket");
 			
+			new Thread(new PeriodicPulls(30)).start();
+			
 			if (runtests) {
 				runTests();
 			}
@@ -91,7 +93,6 @@ public class App extends Debuggable implements Runnable {
 			
 			Log.debug(peers);
 			Log.debug(pocket);
-			Log.debug(pocket.isChainValid());
 			PeerTable test = (PeerTable) peers.requestAll(new PeerTable());
 			Log.debug(test);
 			Pocket test2 = (Pocket) peers.requestAll(new Pocket());

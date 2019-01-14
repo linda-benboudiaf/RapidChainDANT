@@ -35,8 +35,9 @@ public class Node extends Debuggable {
 		int nbFails = 0;
 		Long now = new Date().getTime();
 		for (Long date : fails) {
-			int diff = now.compareTo(date);
-			if (diff > 1000 * 60 * 60 * 24 * 7) {
+			long diff = now - date;
+			int maxDiff = 1000 * 60 * 60 * 24 * 7;
+			if (diff < maxDiff) {
 				nbFails ++;
 			}
 		}
