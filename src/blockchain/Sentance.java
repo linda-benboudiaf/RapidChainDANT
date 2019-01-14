@@ -36,4 +36,14 @@ public class Sentance {
 		return StringUtil.verifyECDSASig(sender, data, signature);
 	}
 
+	public boolean isEmpty() {
+		if (value.isEmpty())
+			return true;
+		else
+			return false;
+	}
+	public String toString() {
+		return "data : "+this.value.toString()+" , sender public key : "+sender.toString();
+	}
+
 }

@@ -20,7 +20,7 @@ public class App extends Debuggable implements Runnable {
 	protected static volatile PeerTable peers;
 	protected static volatile Pocket pocket;
 	protected static volatile NodeServer server;
-	protected static volatile ArrayList<Sentance> phrases;
+	protected static volatile ArrayList<Sentance> phrases=new ArrayList<Sentance>();
 	
 	public App() {
 		this (defaultPort);
@@ -77,7 +77,7 @@ public class App extends Debuggable implements Runnable {
 
 		// tests
 		try {
-			
+			 new Thread(new NodeClient()).start();
 			//tests routetable
 //			routeTable.add(new Node("128.78.51.131", 3032));
 			peers.add(new Node("localhost", 3023));

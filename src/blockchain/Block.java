@@ -18,7 +18,7 @@ public class Block implements Storable{
 
 	protected String hash;
 	protected String previousHash;
-	protected String data;
+	protected Sentance data;
 	protected long timeStamp;
 	protected int nonce;
 	protected Node validator; // on garde une trace du validateur = node qui a validé le block
@@ -29,7 +29,7 @@ public class Block implements Storable{
 	 * @param data
 	 * @param previousHash
 	 */
-	public Block(String data,String previousHash ) {
+	public Block(Sentance data,String previousHash ) {
 		this.data = data;
 		this.previousHash = previousHash;
 		this.timeStamp = new Date().getTime();
