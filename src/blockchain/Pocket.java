@@ -13,7 +13,7 @@ import node.Node;
 
 @SuppressWarnings("serial")
 public class Pocket implements java.io.Serializable, Storable {
-	public ArrayList<Block> heads = new ArrayList<Block>();
+	public ArrayList<Head> heads = new ArrayList<Head>();
 	public static int level = 5;
 	
 	// L'idee est de crée une ArrayList afin de stocker les blocks puis l'importer
@@ -31,26 +31,37 @@ public class Pocket implements java.io.Serializable, Storable {
 	 * 
 	 * @return
 	 */
-	public String highestHash() {
-		return highestHead().hash;
+	public String highestValidHash() {
+		return highestValidHead().hash;
 	}
 	
-	public Block highestHead() {
-		for (Block head : heads) {
-			return head;
+	public Head highestValidHead() {
+		for (Head head : heads) {
+			if (head.fullyValid()) {
+				return head;
+			}
 		}
-		Block genesis = new Block(new Sentance("Im the first 1 Im the Genesis Block"), "0");
+		Head genesis = new Head(new Sentance("Im the first 1 Im the Genesis Block"), "0");
 		addBlock(genesis);
 		return genesis;
+	}
+	
+	/**
+	 * Fonction pour vérifier qu'un block peut être miné par ce noeud au bout de la plus longue chaine
+	 * @return
+	 */
+	public boolean canMineBlock() {
+		Head head = highestValidHead();
+		return head.fullyValid();
 	}
 
 	public void addBlock(Block newBlock) {
 		int i;
-		boolean newHead = true;
+		boolean isNewHead = true;
 		for  (i = 0; i < heads.size(); i++) {
 			Block head = heads.get(i);
 			if (newBlock.previousHash.equals(head.hash)) {
-				newHead = false;
+				isNewHead = false;
 				break;
 			}
 		}
@@ -60,18 +71,23 @@ public class Pocket implements java.io.Serializable, Storable {
 		} catch (IOException e) {
 			Log.error(e);
 		}
-		if (newHead) {
-			heads.add(newBlock);
+		Head newHead = new Head(newBlock);
+		if (isNewHead) {
+			heads.add(newHead);
+			newHead.setChecked();
+			newHead.setValid();
 		} else {
-			heads.set(i, newBlock);
+			heads.set(i, newHead);
+			isChainValid(newHead);
 		}
+		
 	}
 
 	public void tests() {
 
-		addBlock(new Block(new Sentance("Im the second 2"), highestHash()));
+		addBlock(new Block(new Sentance("Im the second 2"), highestValidHash()));
 
-		addBlock(new Block(new Sentance("Im the third 3"), highestHash()));
+		addBlock(new Block(new Sentance("Im the third 3"), highestValidHash()));
 
 		// On verifie après le minage que la chaine est toujours valide.
 		Log.debug("Is the chaine always valid " + isChainValid());
@@ -80,10 +96,10 @@ public class Pocket implements java.io.Serializable, Storable {
 		 * On crée une instance GsonBuilder avec la méthode create(),
 		 * SetPrettyPrinting() veut dire que le Output est un JSON.
 		 */
-		String BCJson = new GsonBuilder().setPrettyPrinting().create().toJson(getFullChain(highestHead()));
+		String BCJson = new GsonBuilder().setPrettyPrinting().create().toJson(getFullChain(highestValidHead()));
 		System.out.println("BlockChain list:");
 		System.out.println(BCJson);
-		Log.debug("blockchain length: " + getFullChainHashes(highestHead()).size());
+		Log.debug("blockchain length: " + getFullChainHashes(highestValidHead()).size());
 
 	}
 
@@ -93,15 +109,16 @@ public class Pocket implements java.io.Serializable, Storable {
 	 * @param head
 	 * @return
 	 */
-	public ArrayList<Block> getFullChain(Block head) {
+	public ArrayList<Block> getFullChain(Head head) {
 		ArrayList<Block> prevs = new ArrayList<Block>();
 		Stack<Block> stack = new Stack<Block>();
+		Block current;
 		prevs.add(head);
 		stack.push(head);
 		while(!stack.empty()) {
-			head = stack.pop();
+			current = stack.pop();
 			try {
-				Block prev = Block.get(head.previousHash);
+				Block prev = Block.get(current.previousHash);
 				prevs.add(prev);
 				if (!isGenesisBlock(prev)) {
 					stack.push(prev);
@@ -114,17 +131,18 @@ public class Pocket implements java.io.Serializable, Storable {
 
 	}
 
-	public HashSet<String> getFullChainHashes(Block head) {
+	public HashSet<String> getFullChainHashes(Head head) {
 		Stack<Block> stack = new Stack<Block>();
+		Block current;
 		Block previous;
 		HashSet<String> hashes = new HashSet<>();
 		hashes.add(head.hash);
 		stack.push(head);
 		while(!stack.empty()) {
-			head = stack.pop();
+			current = stack.pop();
 			// try to get previous block from store
 			try {
-				previous = Block.get(head.previousHash);
+				previous = Block.get(current.previousHash);
 				hashes.add(previous.hash);
 				if (!isGenesisBlock(previous)) {
 					stack.push(previous);
@@ -142,7 +160,7 @@ public class Pocket implements java.io.Serializable, Storable {
 	 * @return
 	 */
 	public Boolean isChainValid() {
-		for (Block head : heads) {
+		for (Head head : heads) {
 			if (!isChainValid(head)) {
 				return false;
 			}
@@ -156,22 +174,28 @@ public class Pocket implements java.io.Serializable, Storable {
 	 * @param current
 	 * @return
 	 */
-	public Boolean isChainValid(Block head) {
+	public Boolean isChainValid(Head head) {
+		if (head.checked && head.valid) {
+			Log.debug("Already checked");
+			return true;
+		}
+		head.setChecked();
 		Stack<Block> stack = new Stack<Block>();
+		Block current;
 		Block previous;
 		// use explicit stack call instead of recursivity to save memory
 		stack.push(head);
 		while(!stack.empty()) {
-			head = stack.pop();
+			current = stack.pop();
 			// try to get previous block from store
 			try {
-				previous = Block.get(head.previousHash);
+				previous = Block.get(current.previousHash);
 			} catch (IOException e) {
 				Log.error(e);
 				return false;
 			}
 			// check if block is totally valid
-			if (!isBlockValid(head, previous)) {
+			if (!isBlockValid(current, previous)) {
 				return false;
 			}
 			// if not genesis block, check if previous blocks are valid
@@ -179,6 +203,7 @@ public class Pocket implements java.io.Serializable, Storable {
 				stack.push(previous);
 			} 
 		}
+		head.setValid();
 		return true;
 	}
 

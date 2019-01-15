@@ -78,8 +78,10 @@ public class App extends Debuggable implements Runnable {
 			new Thread(new NodeClient()).start();
 			
 			
-			for (Sentance sentance : phrases) {
-				Block block = new Block(sentance, pocket.highestHash());
+			if (phrases.size() > 1 && pocket.canMineBlock()) {
+				Sentance sentance = phrases.remove(0);
+				Block block = new Block(sentance, pocket.highestValidHash());
+				pocket.addBlock(block);
 				peers.sendAll(block);
 			}
 			

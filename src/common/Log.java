@@ -94,7 +94,7 @@ public abstract class Log {
 	 */
 	public static void error(Exception e, String prefix) {
 		error(e.getMessage(), prefix);
-		if (Log.level > 1) {
+		if (Log.level > 2) {
 			e.printStackTrace();
 		}
 	}
