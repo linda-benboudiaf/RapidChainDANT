@@ -7,6 +7,8 @@ window.onload = async () => {
 		<h1>Data : {{data.value}}</h1>
 		<h3>Hash Block :  {{hash}} </h3>
 		<h4> Previous Hash : <i> {{previousHash}}</i> </h4> 
+		<h4> Sender : {{data.sender}}</h4>
+		<h4> Signature : {{data.signature}}</h4>
 		<h4>TimeStamp : <time class="timeago" datetime="{{timeStamp}}">{{dateString}} {{timeStamp}}</time></h4>
 		{{{html}}}
 	</li>`; 	   
