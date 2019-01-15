@@ -43,10 +43,10 @@ public class Identity implements Storable {
 
 	public void load() {
 		try {
-			FileInputStream fin = new FileInputStream("id_rsa.ser"); // fichier cle privee
+			FileInputStream fin = new FileInputStream("private/id_rsa.ser"); // fichier cle privee
 			ObjectInputStream ois = new ObjectInputStream(fin);
 			privateKey = (PrivateKey) ois.readObject();
-			fin = new FileInputStream("id_rsa.pub.ser");// fichier cle publique
+			fin = new FileInputStream("private/id_rsa.pub.ser");// fichier cle publique
 			ois = new ObjectInputStream(fin);
 			publicKey = (PublicKey) ois.readObject();
 			fin.close();
@@ -60,11 +60,10 @@ public class Identity implements Storable {
 
 	public void save() {
 		try {
-			FileOutputStream fout = new FileOutputStream("id_rsa.ser");
+			FileOutputStream fout = new FileOutputStream("private/id_rsa.ser");
 			ObjectOutputStream oos = new ObjectOutputStream(fout);
 			oos.writeObject(this.privateKey);
-
-			fout = new FileOutputStream("id_rsa.pub.ser");
+			fout = new FileOutputStream("private/id_rsa.pub.ser");
 			oos = new ObjectOutputStream(fout);
 			oos.writeObject(this.publicKey);
 			fout.close();
