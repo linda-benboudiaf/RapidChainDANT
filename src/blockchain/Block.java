@@ -6,8 +6,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 import node.App;
-import common.JsonSerialStrategy;
 import common.Log;
+import common.JsonSerialStrategy;
 import common.Storable;
 
 

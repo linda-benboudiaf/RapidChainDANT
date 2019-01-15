@@ -9,7 +9,7 @@ import blockchain.Pocket;
 import blockchain.Sentance;
 import common.Debuggable;
 import common.Log;
-import common.PrettyJsonSerialStrategy;
+import common.JsonSerialStrategy;
 import common.Store;
 import tcp.Address;
 
@@ -69,10 +69,10 @@ public class App extends Debuggable implements Runnable {
 			// tests routetable
 			peers = new PeerTable();
 			peers.initFromDns();
-			store.register(peers, "peers", new PrettyJsonSerialStrategy());
+			store.register(peers, "peers", new JsonSerialStrategy());
 			store.load("peers");
 			pocket = new Pocket(4);
-			store.register(pocket, "pocket", new PrettyJsonSerialStrategy());
+			store.register(pocket, "pocket", new JsonSerialStrategy());
 			store.load("pocket");
 
 			new Thread(new PeriodicPulls(30)).start();

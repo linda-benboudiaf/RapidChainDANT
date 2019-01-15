@@ -3,6 +3,10 @@ package common;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * Classe abstraite qui est en fait une interface implémentant le design Pattern strategy
+ *
+ */
 public abstract class SerialStrategy {
 	public abstract String serialize(Storable obj);
 	

@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import blockchain.Block;
-import common.PrettyJsonSerialStrategy;
+import common.JsonSerialStrategy;
 import tcp.Connection;
 import tcp.ConnectionManager;
 
@@ -55,7 +55,7 @@ public class NodeConnectionManager extends ConnectionManager {
 						res = c.receive();
 						debug(res);
 						Block block = (Block) res;
-						App.store.register(block, block.file(), new PrettyJsonSerialStrategy());
+						App.store.register(block, block.file(), new JsonSerialStrategy());
 						App.store.save(block.file());
 					} catch(ClassCastException e) {
 						break;

@@ -16,6 +16,7 @@ public class JsonSerialStrategy extends SerialStrategy {
 	public String serialize(Storable obj) {
 		return new GsonBuilder()
 			.enableComplexMapKeySerialization()
+			.setPrettyPrinting()
 			.create()
 			.toJson(obj);
 	}
@@ -25,6 +26,7 @@ public class JsonSerialStrategy extends SerialStrategy {
 		Reader r = new InputStreamReader(str);
 		return new GsonBuilder()
 			.enableComplexMapKeySerialization()
+			.setPrettyPrinting()
 			.create()
 			.fromJson(r, target.getClass());
 	}
@@ -38,6 +40,7 @@ public class JsonSerialStrategy extends SerialStrategy {
 	public Storable unserialize(String str, Storable target) {
 		return new GsonBuilder()
 				.enableComplexMapKeySerialization()
+				.setPrettyPrinting()
 				.create()
 				.fromJson(str, target.getClass());
 	}
@@ -47,11 +50,10 @@ public class JsonSerialStrategy extends SerialStrategy {
 		try {
 			OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");
 			JsonWriter jw = new JsonWriter(osw);
-			new GsonBuilder().setPrettyPrinting().create().toJson(obj, obj.getClass(), jw);
-		} catch(IOException e) {
+			new GsonBuilder().setPrettyPrinting().create().toJson(obj, obj.getClass(), jw);  
+		}catch(IOException e) {
 			Log.error(e);
 		}
+ 
 	}
-
-
 }

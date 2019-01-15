@@ -7,7 +7,7 @@ import java.util.*;
 import com.google.gson.*;
 
 import common.Log;
-import common.PrettyJsonSerialStrategy;
+import common.JsonSerialStrategy;
 import common.Storable;
 import node.App;
 
@@ -66,7 +66,7 @@ public class Pocket implements java.io.Serializable, Storable {
 			}
 		}
 		try {
-			App.store.register(newBlock, newBlock.file(), new PrettyJsonSerialStrategy());
+			App.store.register(newBlock, newBlock.file(), new JsonSerialStrategy());
 			App.store.save(newBlock.file());
 		} catch (IOException e) {
 			Log.error(e);
