@@ -46,7 +46,7 @@ public class App extends Debuggable implements Runnable {
 
 	public App(int port, boolean runtests) {
 		this(port);
-		Log.setLevel(2); // log level debug
+		Log.setLevel(3); // log level debug
 		this.runtests = runtests;
 	}
 
@@ -77,12 +77,10 @@ public class App extends Debuggable implements Runnable {
 
 			new Thread(new PeriodicPulls(30)).start();
 			new Thread(new NodeClient()).start();
-
 			if (phrases.size() > 1 && pocket.canMineBlock()) {
 				Sentance sentance = phrases.remove(0);
 				Block block = new Block(sentance, pocket.highestValidHash());
 				pocket.addBlock(block);
-				peers.sendAll(block);
 			}
 
 			if (runtests) {
@@ -106,8 +104,8 @@ public class App extends Debuggable implements Runnable {
 
 			// tests pocket
 			pocket.tests();
-			Block block = Block.get("0000f898b0e9da48e5a3c7d5d14a272f8b8b874cf93cc44caaefb320e524ad49");
-			Log.debug(block.getData().verifiySignature(), "HO yeah baby");
+//			Block block = Block.get("0000f898b0e9da48e5a3c7d5d14a272f8b8b874cf93cc44caaefb320e524ad49");
+//			Log.debug(block.getData().verifiySignature(), "HO yeah baby");
 
 			store.save("pocket");
 			Log.debug(peers);
@@ -119,6 +117,8 @@ public class App extends Debuggable implements Runnable {
 			peers.putAll(test);
 			store.save("peers");
 			Log.debug(peers);
+
+//			peers.sendAllBlocks();
 
 		} catch (IOException e) {
 			Log.error(e);

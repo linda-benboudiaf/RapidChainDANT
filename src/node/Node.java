@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import blockchain.Block;
 import common.Debuggable;
 import common.Storable;
 import tcp.Address;
@@ -49,6 +50,18 @@ public class Node extends Debuggable implements Serializable {
 		return nbFails;
 	}
 	
+	public NodeConnection getConnection() {
+		try {
+			Socket s = new Socket();
+			s.connect(addr.inet());
+			return (NodeConnection) factory.createConn(s, this.prefix);
+		} catch (IOException e) {
+			this.fails.add(new Date().getTime());
+			this.error(e);
+			return null;
+		}
+	}
+	
 	public Serializable request(Storable obj) {
 		try (Socket s = new Socket()) {
 			s.connect(addr.inet());
@@ -71,7 +84,7 @@ public class Node extends Debuggable implements Serializable {
 		}
 	}
 	
-	public void send(Storable obj) {
+	public void sendAllBlocks() {
 		try (Socket s = new Socket()) {
 			s.connect(addr.inet());
 			lastConnection = new Date().getTime();
@@ -79,11 +92,10 @@ public class Node extends Debuggable implements Serializable {
 			c.setPrefix(prefix);
 			c.send("push");
 			c.receive();
-			c.send(obj.command());
+			c.send(new Block().command());
 			String ok = (String) c.receive();
 			if (ok.equals(ok)) {
-				c.send(obj);
-				c.receive();
+				App.pocket.streamAllBlocks(c.getOos());
 			}
 			c.send(Protocol.exit);
 			c.receive();

@@ -49,9 +49,18 @@ public class NodeConnectionManager extends ConnectionManager {
 				return "nope";
 			case "block":
 				c.send("ok");
-				Block block = (Block) c.receive();
-				App.store.register(block, block.file(), new PrettyJsonSerialStrategy());
-				App.store.save(block.file());
+				while (true) {
+					Serializable res;
+					try {
+						res = c.receive();
+						debug(res);
+						Block block = (Block) res;
+						App.store.register(block, block.file(), new PrettyJsonSerialStrategy());
+						App.store.save(block.file());
+					} catch(ClassCastException e) {
+						break;
+					}
+				}
 				return "ok";
 			default:
 				return super.response(msg);

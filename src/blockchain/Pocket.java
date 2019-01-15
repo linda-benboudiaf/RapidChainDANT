@@ -1,6 +1,7 @@
 package blockchain;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.*;
 import com.google.gson.*;
@@ -9,7 +10,6 @@ import common.Log;
 import common.PrettyJsonSerialStrategy;
 import common.Storable;
 import node.App;
-import node.Node;
 
 @SuppressWarnings("serial")
 public class Pocket implements java.io.Serializable, Storable {
@@ -131,6 +131,34 @@ public class Pocket implements java.io.Serializable, Storable {
 
 	}
 
+	/**
+	 * Récupère la longueur d'une chaine à partir de sa head.
+	 * N'est pas encore utilisée...
+	 * @param head
+	 * @return
+	 * @throws IOException 
+	 */
+	public void streamFullChain(Head head, ObjectOutputStream os) throws IOException {
+		Stack<Block> stack = new Stack<Block>();
+		Block current;
+		Block previous;
+		os.writeObject(head);
+		stack.push(head);
+		while(!stack.empty()) {
+			current = stack.pop();
+			try {
+				previous = Block.get(current.previousHash);
+				os.writeObject(previous);
+				if (!isGenesisBlock(previous)) {
+					stack.push(previous);
+				}
+			} catch (IOException e) {
+				Log.error(e);
+			}
+		}
+
+	}
+
 	public HashSet<String> getFullChainHashes(Head head) {
 		Stack<Block> stack = new Stack<Block>();
 		Block current;
@@ -211,39 +239,11 @@ public class Pocket implements java.io.Serializable, Storable {
 	 * Envoie l'ensemble des chaines
 	 * 
 	 * @return
+	 * @throws IOException 
 	 */
-	public void sendAllBlocks(Node node) {
-		for (Block head : heads) {
-			sendAllBlocks(head, node);
-		}
-	}
-
-	/**
-	 * Fonction envoyant la totalité d'une chaine en partant de sa head
-	 * 
-	 * @param current
-	 * @return
-	 */
-	public void sendAllBlocks(Block head, Node node) {
-		Stack<Block> stack = new Stack<Block>();
-		Block previous;
-		// use explicit stack call instead of recursivity to save memory
-		node.send(head);
-		stack.push(head);
-		while(!stack.empty()) {
-			head = stack.pop();
-			// try to get previous block from store
-			try {
-				previous = Block.get(head.previousHash);
-				node.send(previous);
-			} catch (IOException e) {
-				Log.error(e);
-				break;
-			}
-			// if not genesis block, check if previous blocks are valid
-			if (!isGenesisBlock(previous)) {
-				stack.push(previous);
-			} 
+	public void streamAllBlocks(ObjectOutputStream os) throws IOException {
+		for (Head head : heads) {
+			streamFullChain(head, os);
 		}
 	}
 
@@ -254,8 +254,9 @@ public class Pocket implements java.io.Serializable, Storable {
 	/**
 	 * Verifie un block par rapport à son précédent
 	 * 1. le hash qui déjà stocké dans la chaine et celui qu'on vient de calculer.
-	 * 2. la valeur de "PreviousHash" du block en cours.
-	 * 3. la difficulté du hash
+	 * 2. la signature de la phrase.
+	 * 3. la valeur de "PreviousHash" du block en cours.
+	 * 4. la difficulté du hash
 	 * 
 	 * @param current
 	 * @param previous
@@ -267,6 +268,11 @@ public class Pocket implements java.io.Serializable, Storable {
 		// On compare le hash stocké et le hash calculé
 		if (!current.hash.equals(current.calculateHash())) {
 			Log.debug("Current hash not valid, check hash values");
+			return false;
+		}
+		// On check la signature 
+		if(!current.data.verifiySignature()) {
+			Log.debug("Signature not valid");
 			return false;
 		}
 		// On compare le précédent hash et le hash précédent stocké dans le block en
