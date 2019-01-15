@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import blockchain.Block;
+import blockchain.Identity;
 import blockchain.Pocket;
 import blockchain.Sentance;
 import common.Debuggable;
@@ -20,7 +21,12 @@ public class App extends Debuggable implements Runnable {
 	protected static volatile Pocket pocket;
 	protected static volatile NodeServer server;
 	protected static volatile ArrayList<Sentance> phrases=new ArrayList<Sentance>();
+	static Identity keys; //cle privee et cle publique
 	
+	public static Identity getKeys() {
+		return keys;
+	}
+
 	public App() {
 		this (defaultPort);
 	}
@@ -28,6 +34,9 @@ public class App extends Debuggable implements Runnable {
 	public App(int port) {
 		this.addr = new Address("localhost", port);
 		this.prefix = "APP";
+		if(keys.isEmpty()) {
+			keys.generateKeyPair();
+		}
 		
 		//set log level to info
 		Log.start(store, 1);
@@ -96,9 +105,7 @@ public class App extends Debuggable implements Runnable {
 			
 			//tests pocket
 			pocket.tests();
-			store.save("pocket");
-//			store.load("pocket");
-			
+			store.save("pocket");			
 			Log.debug(peers);
 			Log.debug(pocket);
 			PeerTable test = (PeerTable) peers.requestAll(new PeerTable());

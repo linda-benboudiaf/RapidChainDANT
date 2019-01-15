@@ -30,6 +30,7 @@ public class Block implements Serializable, Storable{
 		this.data = data;
 		this.previousHash = previousHash;
 		this.timeStamp = new Date().getTime();
+		
 		this.hash = calculateHash(); // sera appliqué une fois que les autres valeurs sont initialisées.
 		mineBlock(Pocket.level);
 	}

@@ -53,10 +53,4 @@ public class Identity implements Storable {
 		return "id";
 	}
 
-	public static void main(String[] args) {
-		Identity i = new Identity();
-		System.out.println("Private Key °°°" + i.privateKey);
-		System.out.println("Public Key °°°°" + i.publicKey);
-
-	}
 }
