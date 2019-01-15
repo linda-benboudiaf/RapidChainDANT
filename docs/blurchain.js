@@ -2,6 +2,7 @@ window.onload = async () => {
 
 	const url = 'blurchain.club1.fr';
 	let lastFetchedBlock = {};
+	let list = document.getElementById("list-blocks");
 	const template = await fetch('block.mustache')
 		.then(response => response.text());
 
