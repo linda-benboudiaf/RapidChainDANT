@@ -1,5 +1,9 @@
 package blockchain;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.security.*;
 import java.security.spec.ECGenParameterSpec;
@@ -9,7 +13,7 @@ import common.Storable;
 public class Identity implements Storable {
 	public PrivateKey privateKey;
 	public PublicKey publicKey;
-	
+
 	public Identity() {
 	}
 
@@ -35,6 +39,25 @@ public class Identity implements Storable {
 		}
 	}
 
+	public void load() {
+		try {
+			FileInputStream fin = new FileInputStream("id_rsa.ser"); // fichier cle privee
+			ObjectInputStream ois = new ObjectInputStream(fin);
+			privateKey = (PrivateKey) ois.readObject();
+			fin = new FileInputStream("id_rsa.pub.ser");// fichier cle publique
+			ois = new ObjectInputStream(fin);
+			publicKey = (PublicKey) ois.readObject();
+		} catch (ClassNotFoundException | IOException e) {
+			e.printStackTrace();
+
+		}
+
+	}
+
+	public void save() {
+
+	}
+
 	@Override
 	public boolean isEmpty() {
 		return privateKey == null;
@@ -45,7 +68,7 @@ public class Identity implements Storable {
 		Identity i = (Identity) obj;
 		privateKey = i.privateKey;
 		publicKey = i.publicKey;
-		
+
 	}
 
 	@Override
