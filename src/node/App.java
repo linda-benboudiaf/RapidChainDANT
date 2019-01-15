@@ -1,4 +1,5 @@
 package node;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -20,29 +21,29 @@ public class App extends Debuggable implements Runnable {
 	protected static volatile PeerTable peers;
 	protected static volatile Pocket pocket;
 	protected static volatile NodeServer server;
-	protected static volatile ArrayList<Sentance> phrases=new ArrayList<Sentance>();
-	static Identity keys; //cle privee et cle publique
-	
+	protected static volatile ArrayList<Sentance> phrases = new ArrayList<Sentance>();
+	static Identity keys = new Identity(); // cle privee et cle publique
+
 	public static Identity getKeys() {
 		return keys;
 	}
 
 	public App() {
-		this (defaultPort);
+		this(defaultPort);
 	}
 
 	public App(int port) {
 		this.addr = new Address("localhost", port);
 		this.prefix = "APP";
-		if(keys.isEmpty()) {
+		if (keys.isEmpty()) {
 			keys.generateKeyPair();
 		}
-		
-		//set log level to info
+
+		// set log level to info
 		Log.start(store, 1);
 
 	}
-	
+
 	public App(int port, boolean runtests) {
 		this(port);
 		Log.setLevel(2); // log level debug
@@ -69,22 +70,21 @@ public class App extends Debuggable implements Runnable {
 			peers = new PeerTable();
 			peers.initFromDns();
 			store.register(peers, "peers", new PrettyJsonSerialStrategy());
-			store.load("peers");			
+			store.load("peers");
 			pocket = new Pocket(4);
 			store.register(pocket, "pocket", new PrettyJsonSerialStrategy());
 			store.load("pocket");
-			
+
 			new Thread(new PeriodicPulls(30)).start();
 			new Thread(new NodeClient()).start();
-			
-			
+
 			if (phrases.size() > 1 && pocket.canMineBlock()) {
 				Sentance sentance = phrases.remove(0);
 				Block block = new Block(sentance, pocket.highestValidHash());
 				pocket.addBlock(block);
 				peers.sendAll(block);
 			}
-			
+
 			if (runtests) {
 				runTests();
 			}
@@ -93,21 +93,23 @@ public class App extends Debuggable implements Runnable {
 			Log.error(e);
 		}
 	}
-	
+
 	protected void runTests() {
-		
 
 		// tests
 		try {
-			//tests routetable
-//			routeTable.add(new Node("128.78.51.131", 3032));
+			// tests routetable
+			// routeTable.add(new Node("128.78.51.131", 3032));
 			peers.add(new Node("localhost", 3023));
 			store.save("peers");
 			store.load("peers");
-			
-			//tests pocket
+
+			// tests pocket
 			pocket.tests();
-			store.save("pocket");			
+			Block block = Block.get("0000f898b0e9da48e5a3c7d5d14a272f8b8b874cf93cc44caaefb320e524ad49");
+			Log.debug(block.getData().verifiySignature(), "HO yeah baby");
+
+			store.save("pocket");
 			Log.debug(peers);
 			Log.debug(pocket);
 			PeerTable test = (PeerTable) peers.requestAll(new PeerTable());
@@ -117,7 +119,7 @@ public class App extends Debuggable implements Runnable {
 			peers.putAll(test);
 			store.save("peers");
 			Log.debug(peers);
-			
+
 		} catch (IOException e) {
 			Log.error(e);
 		}

@@ -6,8 +6,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.security.PublicKey;
 
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.stream.JsonWriter;
 
 public class PrettyJsonSerialStrategy extends SerialStrategy {
@@ -47,7 +49,6 @@ public class PrettyJsonSerialStrategy extends SerialStrategy {
 
 	@Override
 	public void serialize(OutputStream os, Storable obj) {
-		// TODO Auto-generated method stub
 		try {
 			OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");
 			JsonWriter jw = new JsonWriter(osw);

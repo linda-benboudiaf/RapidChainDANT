@@ -13,14 +13,20 @@ import node.App;
  */
 public class Sentance implements Serializable{
 	public String value;
-	public PublicKey sender; // senders address/public key.
+	//public PublicKey sender; // senders address/public key.
+	public String sender; // senders address/public key.
+
 	public byte[] signature; // this is to prevent anybody else from spending funds in our wallet.
 
 
 	// Constructor:
 	public Sentance(String value) {
 		this.value = value;
-		generateSignature(App.getKeys().privateKey);
+		this.sender=StringUtil.getStringFromKey(App.getKeys().publicKey);
+		
+
+		if(signature==null)
+			generateSignature(App.getKeys().privateKey);
 	}
 	//Calcule le hash de la DATA
 	public String calculateHash() {
@@ -28,13 +34,13 @@ public class Sentance implements Serializable{
 	}
 	
 	public void generateSignature(PrivateKey privateKey) {
-		String data = StringUtil.getStringFromKey(sender) + value;
+		String data = sender + value;
 		signature = StringUtil.applyECDSASig(privateKey, data);
 	}
 
 	// Verifies the data we signed hasnt been tampered with
 	public boolean verifiySignature() {
-		String data = StringUtil.getStringFromKey(sender) + value;
+		String data = sender + value;
 		return StringUtil.verifyECDSASig(sender, data, signature);
 	}
 

@@ -1,7 +1,10 @@
 package blockchain;
 import java.security.*;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Base64.Decoder;
+
 import com.google.gson.GsonBuilder;
 import java.util.List;
 
@@ -47,19 +50,34 @@ public class StringUtil {
 	}
 	
 	//Verifies a String signature 
-	public static boolean verifyECDSASig(PublicKey publicKey, String data, byte[] signature) {
+	public static boolean verifyECDSASig(String publicKey, String data, byte[] signature) {
 		try {
-			Signature ecdsaVerify = Signature.getInstance("ECDSA", "BC");
-			ecdsaVerify.initVerify(publicKey);
+			Signature ecdsaVerify = Signature.getInstance("ECDSA", "BC");			
+			ecdsaVerify.initVerify(getKey(publicKey));
 			ecdsaVerify.update(data.getBytes());
 			return ecdsaVerify.verify(signature);
 		}catch(Exception e) {
 			throw new RuntimeException(e);
 		}
 	}	
-		
+	public static PublicKey getKey(String key){
+	    try{
+	        byte[] byteKey = Base64.getDecoder().decode(key.getBytes());
+	        X509EncodedKeySpec X509publicKey = new X509EncodedKeySpec(byteKey);
+	        KeyFactory kf = KeyFactory.getInstance("ECDSA", "BC");
+
+	        return kf.generatePublic(X509publicKey);
+	    }
+	    catch(Exception e){
+	        e.printStackTrace();
+	    }
+
+	    return null;
+	}	
 	public static String getStringFromKey(Key key) {
-		return Base64.getEncoder().encodeToString(key.getEncoded());
+		X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(
+				key.getEncoded());
+		return Base64.getEncoder().encodeToString(x509EncodedKeySpec.getEncoded());
 	}
 	
 }
