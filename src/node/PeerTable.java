@@ -60,13 +60,14 @@ public class PeerTable extends HashMap<Address, Node> implements Storable {
 		return obj;
 	}
 
-	public void sendAll(Storable obj) {
+	public void sendAllBlocks() {
 		int fails;
 		PeerTable nodes = (PeerTable) this.clone();
 		for (Node node : nodes.values()) {
 			fails = node.nbFailsLast24h();
 			if (fails < tolerance) {
-				node.send(obj);
+				node.sendAllBlocks();
+				
 			}
 		}
 	}

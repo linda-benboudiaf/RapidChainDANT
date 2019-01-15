@@ -7,6 +7,7 @@ import common.IOTransmitter;
 
 public class Connection extends IOTransmitter {
 	protected Address addr;
+	protected Socket sock;
 
 	public Connection(String prefix) {
 		super(prefix);
@@ -31,6 +32,7 @@ public class Connection extends IOTransmitter {
 	 */
 	public void setFromSocket(Socket sock) {
 		try {
+			this.sock = sock;
 			this.is = sock.getInputStream();
 			this.os = sock.getOutputStream();
 			this.addr = new Address(sock.getLocalAddress().getHostAddress(), sock.getLocalPort());
