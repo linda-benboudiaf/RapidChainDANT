@@ -106,8 +106,8 @@ public class App extends Debuggable implements Runnable {
 
 			// tests pocket
 			pocket.tests();
-			Block block = Block.get("0000f898b0e9da48e5a3c7d5d14a272f8b8b874cf93cc44caaefb320e524ad49");
-			Log.debug(block.getData().verifiySignature(), "HO yeah baby");
+//			Block block = Block.get("0000f898b0e9da48e5a3c7d5d14a272f8b8b874cf93cc44caaefb320e524ad49");
+//			Log.debug(block.getData().verifiySignature(), "HO yeah baby");
 
 			store.save("pocket");
 			Log.debug(peers);
